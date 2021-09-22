@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/avatar.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/avatar.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic%7CRoboto+Condensed:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aa10n.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":20},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。   NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NEMU PA1 详解">
+<meta property="og:url" content="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/index.html">
+<meta property="og:site_name" content="aa10n&#39;s blog">
+<meta property="og:description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。   NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-20T18:46:10.000Z">
+<meta property="article:modified_time" content="2021-09-22T17:27:33.121Z">
+<meta property="article:author" content="aa10n">
+<meta property="article:tag" content="NEMU">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/","path":"计算机系统基础大作业/NEMUPA1/","title":"NEMU PA1 详解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>NEMU PA1 详解 | aa10n's blog</title>
+  
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">aa10n's blog</h1>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#NEMU-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-text">NEMU 是什么?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83"><span class="nav-text">实验环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9"><span class="nav-text">实验内容:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%9E%E9%AA%8C"><span class="nav-text">开始实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A1-1%EF%BC%9A%E5%AE%9E%E7%8E%B0%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%AF%84%E5%AD%98%E5%99%A8%E7%BB%93%E6%9E%84%E4%BD%93"><span class="nav-text">必做任务 1：实现正确的寄存器结构体</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C"><span class="nav-text">输出结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A12%EF%BC%9A%E5%AE%9E%E7%8E%B0%E5%8D%95%E6%AD%A5%E6%89%A7%E8%A1%8C%E3%80%81%E6%89%93%E5%8D%B0%E5%AF%84%E5%AD%98%E5%99%A8%E3%80%81%E6%89%AB%E6%8F%8F%E5%86%85%E5%AD%98"><span class="nav-text">必做任务2：实现单步执行、打印寄存器、扫描内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%AD%A5%E6%89%A7%E8%A1%8C"><span class="nav-text">单步执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%93%E5%8D%B0%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-text">打印寄存器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%AB%E6%8F%8F%E5%86%85%E5%AD%98"><span class="nav-text">扫描内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-1"><span class="nav-text">输出结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A1-3%EF%BC%9A%E5%AE%9E%E7%8E%B0%E7%AE%97%E6%9C%AF%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-text">必做任务 3：实现算术表达式的词法分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A1-4%EF%BC%9A%E5%AE%9E%E7%8E%B0%E7%AE%97%E6%9C%AF%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E9%80%92%E5%BD%92%E6%B1%82%E5%80%BC"><span class="nav-text">必做任务 4：实现算术表达式的递归求值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E5%81%9A%E4%BB%BB%E5%8A%A1-1%EF%BC%9A%E5%AE%9E%E7%8E%B0%E5%B8%A6%E6%9C%89%E8%B4%9F%E6%95%B0%E7%9A%84%E7%AE%97%E6%9C%AF%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%B1%82%E5%80%BC"><span class="nav-text">选做任务 1：实现带有负数的算术表达式的求值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A1-5%EF%BC%9A%E5%AE%9E%E7%8E%B0%E6%9B%B4%E5%A4%8D%E6%9D%82%E7%9A%84%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B1%82%E5%80%BC"><span class="nav-text">必做任务 5：实现更复杂的表达式求值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%89%E5%81%9A%E4%BB%BB%E5%8A%A1-2%EF%BC%9A%E5%AE%9E%E7%8E%B0%E6%8C%87%E9%92%88%E8%A7%A3%E5%BC%95%E7%94%A8"><span class="nav-text">选做任务 2：实现指针解引用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-2"><span class="nav-text">输出结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A1-6%EF%BC%9A%E5%AE%9E%E7%8E%B0%E7%9B%91%E8%A7%86%E7%82%B9%E6%B1%A0%E7%9A%84%E7%AE%A1%E7%90%86"><span class="nav-text">必做任务 6：实现监视点池的管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A1-7%EF%BC%9A%E5%AE%9E%E7%8E%B0%E7%9B%91%E8%A7%86%E7%82%B9"><span class="nav-text">必做任务 7：实现监视点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-3"><span class="nav-text">输出结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E8%87%AA%E6%9F%A5%E8%A1%A8"><span class="nav-text">任务自查表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%98"><span class="nav-text">思考题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%981%EF%BC%9Aopcode-table-%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%80%E4%B8%AA%E4%BB%80%E4%B9%88%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%95%B0%E7%BB%84%EF%BC%9F"><span class="nav-text">思考题1：opcode_table 到底是一个什么类型的数组？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%982%EF%BC%881%EF%BC%89%EF%BC%9A%E5%9C%A8-cmd-c-%E5%87%BD%E6%95%B0%E4%B8%AD-%E8%B0%83%E7%94%A8-cpu-exec-%E7%9A%84%E6%97%B6%E5%80%99%E4%BC%A0%E5%85%A5%E4%BA%86%E5%8F%82%E6%95%B0-1-%E4%BD%A0%E7%9F%A5%E9%81%93%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%97"><span class="nav-text">思考题2（1）：在 cmd_c()函数中, 调用 cpu_exec()的时候传入了参数-1 , 你知道为什么吗?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%982%EF%BC%882%EF%BC%89%EF%BC%9A%E6%A1%86%E6%9E%B6%E4%BB%A3%E7%A0%81%E4%B8%AD%E5%AE%9A%E4%B9%89-wp-pool-%E7%AD%89%E5%8F%98%E9%87%8F%E7%9A%84%E6%97%B6%E5%80%99%E4%BD%BF%E7%94%A8%E4%BA%86%E5%85%B3%E9%94%AE%E5%AD%97-static%EF%BC%8Cstatic-%E5%9C%A8%E6%AD%A4%E5%A4%84-%E7%9A%84%E5%90%AB%E4%B9%89%E6%98%AF%E4%BB%80%E4%B9%88-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%9C%A8%E6%AD%A4%E5%A4%84%E4%BD%BF%E7%94%A8%E5%AE%83"><span class="nav-text">思考题2（2）：框架代码中定义 wp_pool 等变量的时候使用了关键字 static，static 在此处 的含义是什么? 为什么要在此处使用它?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E9%A2%983%EF%BC%9A"><span class="nav-text">思考题3：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%AE%B0"><span class="nav-text">后记</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="aa10n"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">aa10n</p>
+  <div class="site-description" itemprop="description">一个菜鸡的blog</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/aa10n" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aa10n" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/aa10n" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;aa10n" rel="noopener" target="_blank">Gitee</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jinde0501@gmail.com" title="E-Mail → mailto:jinde0501@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.instagram.com/jinde_0501/" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;jinde_0501&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="aa10n">
+      <meta itemprop="description" content="一个菜鸡的blog">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="aa10n's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NEMU PA1 详解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：星期二, 9月 21日 2021年 02:46:10" itemprop="dateCreated datePublished" datetime="2021-09-21T02:46:10+08:00">星期二, 9月 21日 2021年</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/" itemprop="url" rel="index"><span itemprop="name">计算机系统基础大作业</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <table><tr><td bgcolor=red><center><b>在阅读本文前，务必自行阅读一遍南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
+
+<hr>
+<h2 id="NEMU-是什么"><a href="#NEMU-是什么" class="headerlink" title="NEMU 是什么?"></a><center><font size=6>NEMU 是什么?</font></center></h2><p>这是实验指导书中的一段描述。</p>
+<blockquote>
+<p><font size=3><i>PA的目的是要实现NEMU, 一款经过简化的全系统模拟器.</p>
+<p>但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以为你模拟出红白机的所有功能. 有了它, 你就好像有了一个真正的红白机, 可以玩你最喜欢的红白机游戏. <a target="_blank" rel="noopener" href="https://github.com/NJU-ProjectN/litenes">这里</a>是jyy移植的一个小型项目LiteNES, PA工程里面已经带有这个项目, 你可以在如今这个红白机难以寻觅的时代, 再次回味你儿时的快乐时光, 这实在是太神奇了!</i></front></p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
+<li><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
+</li>
+<li><p>PA1几乎没有涉及到任何的计算机基础知识。我认为PA1是对写代码进行一个热身，把一些不太熟悉的操作再次学习。</p>
+</li>
+<li><p><b>代码框架请自行理解，实验指导书中已经详细说明了。</b></p>
+</li>
+</ul>
+<hr>
+<h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>NEMU 是基于 Linux/GNU 实验环境，所需要的环境如下：</p>
+<ul>
+<li>操作系统：Ubuntu18.04</li>
+<li>编译器：GCC-4.4.7</li>
+</ul>
+<h2 id="实验内容"><a href="#实验内容" class="headerlink" title="实验内容:"></a>实验内容:</h2><p>本次实验包含如下三个阶段：</p>
+<ul>
+<li><p>阶段 1：实现“单步、打印寄存器状态、扫描内存”三个调试功能 </p>
+</li>
+<li><p>阶段 2：实现调试功能的表达式求值</p>
+</li>
+<li><p>阶段 3：实现监视点</p>
+</li>
+</ul>
+<h2 id="开始实验"><a href="#开始实验" class="headerlink" title="开始实验"></a><center><font size=6>开始实验</font></center></h2><hr>
+<h2 id="必做任务-1：实现正确的寄存器结构体"><a href="#必做任务-1：实现正确的寄存器结构体" class="headerlink" title="必做任务 1：实现正确的寄存器结构体"></a>必做任务 1：实现正确的寄存器结构体</h2><center><b>nemu/include/cpu/reg.h</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">        <span class="class"><span class="keyword">union</span> &#123;</span></span><br><span class="line">            <span class="keyword">uint32_t</span> _32;</span><br><span class="line">            <span class="keyword">uint16_t</span> _16;</span><br><span class="line">            <span class="keyword">uint8_t</span> _8[<span class="number">2</span>];</span><br><span class="line">        &#125; gpr[<span class="number">8</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* Do NOT change the order of the GPRs&#x27; definitions. */</span></span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            <span class="keyword">uint32_t</span> eax, ecx, edx, ebx, esp, ebp, esi, edi;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">swaddr_t</span> eip;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125; CPU_state;</span><br></pre></td></tr></table></figure>
+
+<p>修改结果如上，这是关于匿名结构体和联合体的使用。我们可以在<strong>结构体</strong>中使用<strong>匿名</strong>的方式声明某个联合体（或结构体）。之后就可以直接利用结构体访问成员的方式一样访问结构体中已经声明过的匿名联合体（或结构体）的成员，使用这种方式可以让代码更加简洁。</p>
+<blockquote>
+<p>具体可参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/u012308586/article/details/105728995">C 语言中的匿名联合体和匿名结构体_CSDN博客-CSDN博客</a></p>
+</blockquote>
+<h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">aa10n@aa10n-VirtualBox:~/NEMU2021$ make run</span><br><span class="line">objcopy -S -O binary obj/kernel/kernel entry</span><br><span class="line">obj/nemu/nemu obj/testcase/mov-c</span><br><span class="line">Welcome to NEMU!</span><br><span class="line">The executable is obj/testcase/mov-c.</span><br><span class="line">For <span class="built_in">help</span>, <span class="built_in">type</span> <span class="string">&quot;help&quot;</span></span><br><span class="line">(nemu) c</span><br><span class="line">nemu: HIT GOOD TRAP at eip = 0x001012db</span><br></pre></td></tr></table></figure>
+
+<p><font size =2><center><b>注意：如果刚开始做PA，输出会和我稍有不同，但是只要终端输出<font color =red>HIT GOOD TRAP</font>问题就不大。</b></center></font></p>
+<h2 id="必做任务2：实现单步执行、打印寄存器、扫描内存"><a href="#必做任务2：实现单步执行、打印寄存器、扫描内存" class="headerlink" title="必做任务2：实现单步执行、打印寄存器、扫描内存"></a>必做任务2：实现单步执行、打印寄存器、扫描内存</h2><p>这次的任务主要是模拟GDB相关的功能。</p>
+<center><b>nemu/src/monitor/debug/ui.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">	<span class="keyword">char</span> *name;</span><br><span class="line">	<span class="keyword">char</span> *description;</span><br><span class="line">	<span class="keyword">int</span> (*handler) (<span class="keyword">char</span> *);</span><br><span class="line">&#125; cmd_table [] = &#123;</span><br><span class="line">	&#123; <span class="string">&quot;help&quot;</span>, <span class="string">&quot;Display informations about all supported commands&quot;</span>, cmd_help &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;c&quot;</span>, <span class="string">&quot;Continue the execution of the program&quot;</span>, cmd_c &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;q&quot;</span>, <span class="string">&quot;Exit NEMU&quot;</span>, cmd_q &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;si&quot;</span>, <span class="string">&quot;One step&quot;</span>, cmd_si &#125;,</span><br><span class="line">	&#123; <span class="string">&quot;info&quot;</span>, <span class="string">&quot;Display all informations of regisiters&quot;</span>, cmd_info &#125;,</span><br><span class="line">	&#123;<span class="string">&quot;x&quot;</span>, <span class="string">&quot;Display the register you want to see&quot;</span>, cmd_x&#125;,</span><br><span class="line">	<span class="comment">/* <span class="doctag">TODO:</span> Add more commands */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在相应位置填写所需要的指令。</p>
+<h3 id="单步执行"><a href="#单步执行" class="headerlink" title="单步执行"></a>单步执行</h3><center><b>nemu/src/monitor/debug/ui.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">cmd_si</span><span class="params">(<span class="keyword">char</span> *args)</span></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> *sencondWord = strtok(<span class="literal">NULL</span>,<span class="string">&quot; &quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> step = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">if</span> (sencondWord == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		cpu_exec(<span class="number">1</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;	</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">sscanf</span>(sencondWord, <span class="string">&quot;%d&quot;</span>, &amp;step);</span><br><span class="line">	<span class="keyword">if</span> (step &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;MISINIPUT\n&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; step; i++)&#123;</span><br><span class="line">		cpu_exec(<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加单步执行的相关代码。这里采取了for循环，一条一条指令执行。因为cpu_exec()函数中的宏MAX_INSTR_TO_PRINT限制为10，更改宏或者for循环后，都可解决无法执行10条以上指令的问题。</p>
+<h3 id="打印寄存器"><a href="#打印寄存器" class="headerlink" title="打印寄存器"></a>打印寄存器</h3><center><b>nemu/src/monitor/debug/ui.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">cmd_info</span><span class="params">(<span class="keyword">char</span> *args)</span></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> *sencondWord = strtok(<span class="literal">NULL</span>,<span class="string">&quot; &quot;</span>);</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">strcmp</span>(sencondWord, <span class="string">&quot;r&quot;</span>) == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">8</span>; i++)&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;%s\t\t&quot;</span>, regsl[i]);</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;0x%08x\t\t%d\n&quot;</span>, cpu.gpr[i]._32, cpu.gpr[i]._32);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;eip\t\t0x%08x\t\t%d\n&quot;</span>, cpu.eip, cpu.eip);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;MISINPUT\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加打印寄存器的相关代码。</p>
+<h3 id="扫描内存"><a href="#扫描内存" class="headerlink" title="扫描内存"></a>扫描内存</h3><center><b>nemu/src/monitor/debug/ui.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">cmd_x</span><span class="params">(<span class="keyword">char</span> *args)</span></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> *sencondWord = strtok(<span class="literal">NULL</span>,<span class="string">&quot; &quot;</span>);</span><br><span class="line">	<span class="keyword">char</span> *thirdWord = strtok(<span class="literal">NULL</span>, <span class="string">&quot; &quot;</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">int</span> step = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">lnaddr_t</span> address;</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">sscanf</span>(sencondWord, <span class="string">&quot;%d&quot;</span>, &amp;step);</span><br><span class="line">	<span class="built_in">sscanf</span>(thirdWord, <span class="string">&quot;%x&quot;</span>, &amp;address);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> i, j = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; step; i++)&#123;</span><br><span class="line">		<span class="keyword">if</span> (j % <span class="number">4</span> == <span class="number">0</span>)&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;0x%x:&quot;</span>, address);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;0x%08x &quot;</span>, lnaddr_read(address, <span class="number">4</span>));</span><br><span class="line">		address += <span class="number">4</span>;</span><br><span class="line">		j++;</span><br><span class="line">		<span class="keyword">if</span> (j % <span class="number">4</span> == <span class="number">0</span>)&#123; <span class="comment">//分割成一行输出五个地址</span></span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">			&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加扫描内存的相关代码。</p>
+<br>
+
+<p>这里均使用到了<strong>char *strtok(char *str, const char *delim)</strong> 库函数，delim代表了分隔符，str则代表要被分解的一组字符串。该函数会有一个返回值，若没有可检索的字符串，则返回一个空指针，否则返回第一个子字符串。</p>
+<blockquote>
+<p>具体可参考：<a target="_blank" rel="noopener" href="https://www.runoob.com/cprogramming/c-function-strtok.html">C 库函数 – strtok() | 菜鸟教程 (runoob.com)</a></p>
+</blockquote>
+<h3 id="输出结果-1"><a href="#输出结果-1" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">(nemu) si</span><br><span class="line">  <span class="number">100000</span>:   bd <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>                        movl $<span class="number">0x0</span>,%ebp</span><br><span class="line">(nemu) si <span class="number">5</span></span><br><span class="line">  <span class="number">100005</span>:   bc <span class="number">00</span> <span class="number">00</span> <span class="number">00</span> <span class="number">08</span>                        movl $<span class="number">0x8000000</span>,%esp</span><br><span class="line">  <span class="number">10000</span>a:   e9 <span class="number">11</span> <span class="number">12</span> <span class="number">00</span> <span class="number">00</span>                        jmp <span class="number">101220</span></span><br><span class="line">  <span class="number">101220</span>:   <span class="number">55</span>                                    pushl %ebp</span><br><span class="line">  <span class="number">101221</span>:   b8 <span class="number">60</span> <span class="number">12</span> <span class="number">10</span> <span class="number">00</span>                        movl $<span class="number">0x101260</span>,%eax</span><br><span class="line">  <span class="number">101226</span>:   <span class="number">89</span> e5                                 movl %esp,%ebp</span><br><span class="line">(nemu) si <span class="number">15</span></span><br><span class="line">  <span class="number">101228</span>:   <span class="number">83</span> ec <span class="number">18</span>                              subl $<span class="number">0x18</span>,%esp</span><br><span class="line">  <span class="number">10122b</span>:   ff e0                                 jmp *%eax</span><br><span class="line">  <span class="number">101260</span>:   <span class="number">55</span>                                    pushl %ebp</span><br><span class="line">  <span class="number">101261</span>:   <span class="number">89</span> e5                                 movl %esp,%ebp</span><br><span class="line">  <span class="number">101263</span>:   <span class="number">83</span> ec <span class="number">18</span>                              subl $<span class="number">0x18</span>,%esp</span><br><span class="line">  <span class="number">101266</span>:   c7 <span class="number">44</span> <span class="number">24</span> <span class="number">0</span>c a3 <span class="number">19</span> <span class="number">10</span> <span class="number">00</span>               movl $<span class="number">0x1019a3</span>,<span class="number">0xc</span>(%esp)</span><br><span class="line">  <span class="number">10126</span>e:   c7 <span class="number">44</span> <span class="number">24</span> <span class="number">08</span> <span class="number">4</span>a <span class="number">00</span> <span class="number">00</span> <span class="number">00</span>               movl $<span class="number">0x4a</span>,<span class="number">0x8</span>(%esp)</span><br><span class="line">  <span class="number">101276</span>:   c7 <span class="number">44</span> <span class="number">24</span> <span class="number">04</span> <span class="number">5</span>c <span class="number">19</span> <span class="number">10</span> <span class="number">00</span>               movl $<span class="number">0x10195c</span>,<span class="number">0x4</span>(%esp)</span><br><span class="line">  <span class="number">10127</span>e:   c7 <span class="number">04</span> <span class="number">24</span> <span class="number">70</span> <span class="number">19</span> <span class="number">10</span> <span class="number">00</span>                  movl $<span class="number">0x101970</span>,(%esp)</span><br><span class="line">  <span class="number">101285</span>:   e8 c6 fe ff ff                        call  <span class="number">101150</span></span><br><span class="line">  <span class="number">101150</span>:   <span class="number">55</span>                                    pushl %ebp</span><br><span class="line">  <span class="number">101151</span>:   <span class="number">89</span> e5                                 movl %esp,%ebp</span><br><span class="line">  <span class="number">101153</span>:   <span class="number">5</span>d                                    popl %ebp</span><br><span class="line">  <span class="number">101154</span>:                                         ret</span><br><span class="line">  <span class="number">10128</span>a:   e8 d1 fe ff ff                        call  <span class="number">101160</span></span><br><span class="line">(nemu) info r</span><br><span class="line">eax             <span class="number">0x00101260</span>              <span class="number">1053280</span></span><br><span class="line">ecx             <span class="number">0x26365f3f</span>              <span class="number">641097535</span></span><br><span class="line">edx             <span class="number">0x5123097b</span>              <span class="number">1361250683</span></span><br><span class="line">ebx             <span class="number">0x7d3f57d7</span>              <span class="number">2101303255</span></span><br><span class="line">esp             <span class="number">0x07ffffc4</span>              <span class="number">134217668</span></span><br><span class="line">ebp             <span class="number">0x07ffffe0</span>              <span class="number">134217696</span></span><br><span class="line">esi             <span class="number">0x1d0c876a</span>              <span class="number">487360362</span></span><br><span class="line">edi             <span class="number">0x4d2976e8</span>              <span class="number">1294563048</span></span><br><span class="line">eip             <span class="number">0x00101160</span>              <span class="number">1053024</span></span><br><span class="line">(nemu) x <span class="number">10</span> <span class="number">0x100000</span></span><br><span class="line"><span class="number">0x100000</span>:<span class="number">0x000000bd</span> <span class="number">0x0000bc00</span> <span class="number">0x11e90800</span> <span class="number">0x90000012</span> </span><br><span class="line"><span class="number">0x100010</span>:<span class="number">0x56e58955</span> <span class="number">0x08458b53</span> <span class="number">0x2d0c5d8b</span> <span class="number">0x40000000</span> </span><br><span class="line"><span class="number">0x100020</span>:<span class="number">0xeac1da89</span> <span class="number">0xf0002516</span> </span><br></pre></td></tr></table></figure>
+
+<p><font size =2><center><b>注意：如果是刚开始做PA，输出可能会和我稍有不同。</b></center></font></p>
+<hr>
+<h2 id="必做任务-3：实现算术表达式的词法分析"><a href="#必做任务-3：实现算术表达式的词法分析" class="headerlink" title="必做任务 3：实现算术表达式的词法分析"></a>必做任务 3：实现算术表达式的词法分析</h2><center><b>nemu/src/monitor/debug/expr.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> &#123;</span></span><br><span class="line">	NOTYPE = <span class="number">256</span>,</span><br><span class="line">	NUM = <span class="number">1</span>,</span><br><span class="line">	RESGISTER = <span class="number">2</span>,</span><br><span class="line">	HEX = <span class="number">3</span>,</span><br><span class="line">	EQ = <span class="number">4</span>,</span><br><span class="line">	NOTEQ = <span class="number">5</span>,</span><br><span class="line">	OR = <span class="number">6</span>,</span><br><span class="line">	AND = <span class="number">7</span>,</span><br><span class="line">	POINT, NEG</span><br><span class="line">	<span class="comment">/* <span class="doctag">TODO:</span> Add more token types */</span></span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>首先在添加表达式相应的token类型。</p>
+<center><b>nemu/src/monitor/debug/expr.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">rule</span> &#123;</span></span><br><span class="line">	<span class="keyword">char</span> *regex;</span><br><span class="line">	<span class="keyword">int</span> token_type;</span><br><span class="line">&#125; rules[] = &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* <span class="doctag">TODO:</span> Add more rules.</span></span><br><span class="line"><span class="comment">	 * Pay attention to the precedence level of different rules.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line"></span><br><span class="line">	&#123;<span class="string">&quot; +&quot;</span>,	NOTYPE&#125;,				<span class="comment">// spaces</span></span><br><span class="line">	</span><br><span class="line">	&#123;<span class="string">&quot;\\+&quot;</span>, <span class="string">&#x27;+&#x27;</span>&#125;,					<span class="comment">// plus</span></span><br><span class="line">	&#123;<span class="string">&quot;\\-&quot;</span>, <span class="string">&#x27;-&#x27;</span>&#125;,</span><br><span class="line">	&#123;<span class="string">&quot;\\*&quot;</span>, <span class="string">&#x27;*&#x27;</span>&#125;,</span><br><span class="line">	&#123;<span class="string">&quot;\\/&quot;</span>, <span class="string">&#x27;/&#x27;</span>&#125;,</span><br><span class="line"></span><br><span class="line">	&#123;<span class="string">&quot;\\$[a-z]+&quot;</span>, RESGISTER&#125;,</span><br><span class="line">	&#123;<span class="string">&quot;0[xX][0-9a-fA-F]+&quot;</span>, HEX&#125;,</span><br><span class="line">	&#123;<span class="string">&quot;[0-9]+&quot;</span>, NUM&#125;,</span><br><span class="line">	</span><br><span class="line">	&#123;<span class="string">&quot;==&quot;</span>, EQ&#125;,						<span class="comment">// equal</span></span><br><span class="line">	&#123;<span class="string">&quot;!=&quot;</span>, NOTEQ&#125;,</span><br><span class="line">	</span><br><span class="line">	&#123;<span class="string">&quot;\\(&quot;</span>, <span class="string">&#x27;(&#x27;</span>&#125;,</span><br><span class="line">	&#123;<span class="string">&quot;\\)&quot;</span>, <span class="string">&#x27;)&#x27;</span>&#125;,</span><br><span class="line">	</span><br><span class="line">	&#123;<span class="string">&quot;\\|\\|&quot;</span>, OR&#125;,</span><br><span class="line">	&#123;<span class="string">&quot;&amp;&amp;&quot;</span>, AND&#125;,</span><br><span class="line">	&#123;<span class="string">&quot;!&quot;</span>, <span class="string">&#x27;!&#x27;</span>&#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在结构体rule中添加相应的规则。这里是正则表达式的运用。</p>
+<center><b>nemu/src/monitor/debug/expr.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">make_token</span><span class="params">(<span class="keyword">char</span> *e)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">				<span class="keyword">int</span> j;</span><br><span class="line">				<span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; <span class="number">32</span>; j++)&#123; <span class="comment">//清空</span></span><br><span class="line">					tokens[nr_token].str[j] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">				<span class="keyword">switch</span>(rules[i].token_type) &#123;</span><br><span class="line">					<span class="keyword">case</span> <span class="number">256</span>:</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="number">1</span>;</span><br><span class="line">						<span class="built_in">strncpy</span>(tokens[nr_token].str, &amp;e[position - substr_len], substr_len);</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="number">2</span>;</span><br><span class="line">						<span class="built_in">strncpy</span>(tokens[nr_token].str, &amp;e[position - substr_len], substr_len);</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="number">3</span>;</span><br><span class="line">						<span class="built_in">strncpy</span>(tokens[nr_token].str, &amp;e[position - substr_len], substr_len);</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="number">4</span>;</span><br><span class="line">						<span class="built_in">strcpy</span>(tokens[nr_token].str, <span class="string">&quot;==&quot;</span>);</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="number">5</span>;</span><br><span class="line">						<span class="built_in">strcpy</span>(tokens[nr_token].str, <span class="string">&quot;!=&quot;</span>);</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="number">6</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="number">6</span>;</span><br><span class="line">						<span class="built_in">strcpy</span>(tokens[nr_token].str, <span class="string">&quot;||&quot;</span>);</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="number">7</span>;</span><br><span class="line">						<span class="built_in">strcpy</span>(tokens[nr_token].str, <span class="string">&quot;&amp;&amp;&quot;</span>);</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="string">&#x27;+&#x27;</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="string">&#x27;+&#x27;</span>;</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="string">&#x27;-&#x27;</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="string">&#x27;-&#x27;</span>;</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="string">&#x27;*&#x27;</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="string">&#x27;*&#x27;</span>;</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="string">&#x27;/&#x27;</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="string">&#x27;/&#x27;</span>;</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="string">&#x27;!&#x27;</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="string">&#x27;!&#x27;</span>;</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="string">&#x27;(&#x27;</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="string">&#x27;(&#x27;</span>;</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">case</span> <span class="string">&#x27;)&#x27;</span>:</span><br><span class="line">						tokens[nr_token].type = <span class="string">&#x27;)&#x27;</span>;</span><br><span class="line">						nr_token++;</span><br><span class="line">						<span class="keyword">break</span>;</span><br><span class="line">					<span class="keyword">default</span>: </span><br><span class="line">						assert(<span class="number">0</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用代码框架中的switch语句，规定token的类型，nr_token代表了token的数量，strcpy()和strncpy()负责函数将表达式复制到tokens.str中。注意区分<b>strcpy()</b>和<b>strncpy()</b>两种函数，前者是复制整个字符串，后者是复制前n个字符。</p>
+<hr>
+<h2 id="必做任务-4：实现算术表达式的递归求值"><a href="#必做任务-4：实现算术表达式的递归求值" class="headerlink" title="必做任务 4：实现算术表达式的递归求值"></a>必做任务 4：实现算术表达式的递归求值</h2><center><b>nemu/src/monitor/debug/expr.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">check_parentheses</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a;</span><br><span class="line">	<span class="keyword">int</span> j = <span class="number">0</span>, k = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span> (tokens[p].type == <span class="string">&#x27;(&#x27;</span> || tokens[q].type == <span class="string">&#x27;)&#x27;</span>)&#123;</span><br><span class="line">		<span class="keyword">for</span> (a = p; a &lt;= q; a++)&#123;</span><br><span class="line">			<span class="keyword">if</span> (tokens[a].type == <span class="string">&#x27;(&#x27;</span>)&#123;</span><br><span class="line">				j++;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (tokens[a].type == <span class="string">&#x27;)&#x27;</span>)&#123;</span><br><span class="line">				k++;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (a != q &amp;&amp; j == k)&#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (j == k)&#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我写了一个新的函数check_parentheses()，该函数是用来识别表达式中的左括号和右括号是否匹配。注意这里我依照实验指导书的指示在一开始加了一个判断式，用于判断表达式是否被一对匹配的括号所包围。</p>
+<center><b>nemu/src/monitor/debug/expr.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dominant_operator</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> step = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">int</span> op = <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">int</span> pri = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">for</span> (i = p; i &lt;= q; i++)&#123;</span><br><span class="line">		<span class="keyword">if</span> (tokens[i].type == <span class="string">&#x27;(&#x27;</span>)&#123;</span><br><span class="line">			step++;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (tokens[i].type == <span class="string">&#x27;)&#x27;</span>)&#123;</span><br><span class="line">			step--;</span><br><span class="line">		&#125;</span><br><span class="line">	</span><br><span class="line">		<span class="keyword">if</span> (step == <span class="number">0</span>)&#123;</span><br><span class="line">		<span class="keyword">if</span> (tokens[i].type == OR)&#123;</span><br><span class="line">			<span class="keyword">if</span> (pri &lt; <span class="number">51</span>)&#123;</span><br><span class="line">				op = i;</span><br><span class="line">				pri = <span class="number">51</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[i].type == AND)&#123;</span><br><span class="line">			<span class="keyword">if</span> (pri &lt; <span class="number">50</span>)&#123;</span><br><span class="line">				op = i;</span><br><span class="line">				pri = <span class="number">50</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[i].type == EQ || tokens[i].type == NOTEQ)&#123;</span><br><span class="line">			<span class="keyword">if</span> (pri &lt; <span class="number">49</span>)&#123;</span><br><span class="line">				op = i;</span><br><span class="line">				pri = <span class="number">49</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[i].type == <span class="string">&#x27;+&#x27;</span> || tokens[i].type == <span class="string">&#x27;-&#x27;</span>)&#123;</span><br><span class="line">			<span class="keyword">if</span> (pri &lt; <span class="number">48</span>)&#123;</span><br><span class="line">				op = i;</span><br><span class="line">				pri = <span class="number">48</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[i].type == <span class="string">&#x27;*&#x27;</span> || tokens[i].type == <span class="string">&#x27;/&#x27;</span>)&#123;</span><br><span class="line">			<span class="keyword">if</span> (pri &lt; <span class="number">46</span>)&#123;</span><br><span class="line">				op = i;</span><br><span class="line">				pri = <span class="number">46</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (step &lt; <span class="number">0</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="number">-2</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> op;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里同样写了一个新的函数dominant_operator()，该函数是用于区分运算符的优先级。首先判断表达式中括号数量是否正确，之后进入if语句根据运算符确定相应的优先级。返回值op为-1时则代表有两个token，是用于后续任务所加的判断。</p>
+<center><b>nemu/src/monitor/debug/expr.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">uint32_t</span> <span class="title">eval</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">int</span> op;</span><br><span class="line">	<span class="keyword">int</span> val1, val2;</span><br><span class="line">	<span class="keyword">if</span> (p &gt; q)&#123;</span><br><span class="line">		assert(<span class="number">0</span>);</span><br><span class="line">	&#125; <span class="keyword">else</span> <span class="keyword">if</span> (p == q)&#123;</span><br><span class="line">		<span class="keyword">if</span> (tokens[p].type == NUM)&#123;</span><br><span class="line">			<span class="built_in">sscanf</span>(tokens[p].str, <span class="string">&quot;%d&quot;</span>, &amp;result);</span><br><span class="line">			<span class="keyword">return</span> result;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[p].type == HEX)&#123;</span><br><span class="line">			<span class="keyword">int</span> i = <span class="number">2</span>;</span><br><span class="line">			<span class="keyword">while</span>(tokens[p].str[i] != <span class="number">0</span>)&#123;</span><br><span class="line">				result *= <span class="number">16</span>;</span><br><span class="line">				result += tokens[p].str[i] &lt; <span class="number">58</span> ? tokens[p].str[i] - <span class="string">&#x27;0&#x27;</span> : tokens[p].str[i] - <span class="string">&#x27;a&#x27;</span> + <span class="number">10</span>;</span><br><span class="line">				i++;</span><br><span class="line">		&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[p].type == RESGISTER)&#123;</span><br><span class="line">			<span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$eax&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.eax;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$ecx&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.ecx;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$edx&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.edx;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$ebx&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.ebx;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$esp&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.esp;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$ebp&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.ebp;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$esi&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.esi;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$edi&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.edi;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$eip&quot;</span>))&#123;</span><br><span class="line">					<span class="keyword">return</span> cpu.eip;</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">				&#125;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			assert(<span class="number">0</span>);</span><br><span class="line">			&#125;</span><br><span class="line">	 &#125; <span class="keyword">else</span> <span class="keyword">if</span> (check_parentheses(p, q) == <span class="literal">true</span>)&#123;</span><br><span class="line">	 	<span class="keyword">return</span> eval(p + <span class="number">1</span>, q - <span class="number">1</span>);</span><br><span class="line">	 &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		op = dominant_operator(p, q);</span><br><span class="line">	 	<span class="keyword">if</span> (op == <span class="number">-2</span>)&#123;</span><br><span class="line">			assert(<span class="number">0</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (op == <span class="number">-1</span>)&#123;</span><br><span class="line">			<span class="keyword">if</span>(tokens[p].type == POINT)&#123;</span><br><span class="line">				<span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$eax&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.eax, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$ecx&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.ecx, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$edx&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.edx, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$ebx&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.ebx, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$esp&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.esp, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$ebp&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.ebp, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$esi&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.esi, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$edi&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.edi, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$eip&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.eip, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					assert(<span class="number">0</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[p].type == NEG)&#123;</span><br><span class="line">				<span class="built_in">sscanf</span>(tokens[q].str, <span class="string">&quot;%d&quot;</span>, &amp;result);</span><br><span class="line">				<span class="keyword">return</span> -result;</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[p].type == <span class="string">&#x27;!&#x27;</span>)&#123;</span><br><span class="line">				<span class="built_in">sscanf</span>(tokens[q].str, <span class="string">&quot;%d&quot;</span>, &amp;result);</span><br><span class="line">				<span class="keyword">return</span> !result;</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[p].type == RESGISTER) &#123;</span><br><span class="line">				<span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$eax&quot;</span>))&#123;</span><br><span class="line">					result = cpu.eax;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$ecx&quot;</span>))&#123;</span><br><span class="line">					result = cpu.ecx;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$edx&quot;</span>))&#123;</span><br><span class="line">					result = cpu.edx;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$ebx&quot;</span>))&#123;</span><br><span class="line">					result = cpu.ebx;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$esp&quot;</span>))&#123;</span><br><span class="line">					result = cpu.esp;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$ebp&quot;</span>))&#123;</span><br><span class="line">					result = cpu.ebp;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$esi&quot;</span>))&#123;</span><br><span class="line">					result = cpu.esi;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$edi&quot;</span>))&#123;</span><br><span class="line">					result = cpu.edi;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p].str, <span class="string">&quot;$eip&quot;</span>))&#123;</span><br><span class="line">					result = cpu.eip;</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					assert(<span class="number">0</span>);</span><br><span class="line">					<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		val1 = eval(p, op - <span class="number">1</span>);</span><br><span class="line">		val2 = eval(op + <span class="number">1</span>, q);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">switch</span> (tokens[op].type)&#123;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">&#x27;+&#x27;</span> : <span class="keyword">return</span> val1 + val2;	</span><br><span class="line">			<span class="keyword">case</span> <span class="string">&#x27;-&#x27;</span> : <span class="keyword">return</span> val1 - val2;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">&#x27;*&#x27;</span> : <span class="keyword">return</span> val1 * val2;</span><br><span class="line">			<span class="keyword">case</span> <span class="string">&#x27;/&#x27;</span> : <span class="keyword">return</span> val1 / val2;</span><br><span class="line">			<span class="keyword">case</span> OR : <span class="keyword">return</span> val1 || val2;</span><br><span class="line">			<span class="keyword">case</span> AND : <span class="keyword">return</span> val1 &amp;&amp; val2;</span><br><span class="line">			<span class="keyword">case</span> EQ : </span><br><span class="line">				   <span class="keyword">if</span> (val1 == val2)&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">				   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">				   &#125;</span><br><span class="line">			<span class="keyword">case</span> NOTEQ :</span><br><span class="line">				   <span class="keyword">if</span> (val1 != val2)&#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">				    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">				    &#125;</span><br><span class="line">			<span class="keyword">default</span> : assert(<span class="number">0</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	 &#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写eval()函数，该函数用于表达式求值。开始先对分裂出来的两个子表达式进行递归求值，然后再根据优先级对两个子表达式的值进行运算。</p>
+<hr>
+<h2 id="选做任务-1：实现带有负数的算术表达式的求值"><a href="#选做任务-1：实现带有负数的算术表达式的求值" class="headerlink" title="选做任务 1：实现带有负数的算术表达式的求值"></a>选做任务 1：实现带有负数的算术表达式的求值</h2><center><b>nemu/src/monitor/debug/expr.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">uint32_t</span> <span class="title">eval</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123;</span><br><span class="line">	 	<span class="keyword">if</span> (op == <span class="number">-2</span>)&#123;</span><br><span class="line">			assert(<span class="number">0</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (op == <span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (tokens[p].type == NEG)&#123;</span><br><span class="line">				<span class="built_in">sscanf</span>(tokens[q].str, <span class="string">&quot;%d&quot;</span>, &amp;result);</span><br><span class="line">				<span class="keyword">return</span> -result;</span><br><span class="line">			<span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当op == -1的时候，如果token的类型是NEG，则取出表达式并且放在result，最后返回-result即可。</p>
+<hr>
+<h2 id="必做任务-5：实现更复杂的表达式求值"><a href="#必做任务-5：实现更复杂的表达式求值" class="headerlink" title="必做任务 5：实现更复杂的表达式求值"></a>必做任务 5：实现更复杂的表达式求值</h2><p>必做任务3、必做任务4，贴出的相关代码都已添加。</p>
+<hr>
+<h2 id="选做任务-2：实现指针解引用"><a href="#选做任务-2：实现指针解引用" class="headerlink" title="选做任务 2：实现指针解引用"></a>选做任务 2：实现指针解引用</h2><center><b>nemu/src/monitor/debug/expr.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">uint32_t</span> <span class="title">eval</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">int</span> q)</span></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">	 	<span class="keyword">if</span> (op == <span class="number">-2</span>)&#123;</span><br><span class="line">			assert(<span class="number">0</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (op == <span class="number">-1</span>)&#123;</span><br><span class="line">			<span class="keyword">if</span>(tokens[p].type == POINT)&#123;</span><br><span class="line">				<span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$eax&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.eax, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$ecx&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.ecx, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$edx&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.edx, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$ebx&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.ebx, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$esp&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.esp, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$ebp&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.ebp, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$esi&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.esi, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$edi&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.edi, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">strcmp</span>(tokens[p + <span class="number">2</span>].str, <span class="string">&quot;$eip&quot;</span>))&#123;</span><br><span class="line">					result = swaddr_read(cpu.eip, <span class="number">4</span>);</span><br><span class="line">					<span class="keyword">return</span> result;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当op == -1的时候，如果token的类型是POINT，判断是哪一个寄存器后，取出的值放在result，最后返回result。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">uint32_t</span> <span class="title">expr</span><span class="params">(<span class="keyword">char</span> *e, <span class="keyword">bool</span> *success)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nr_token; i++)&#123;</span><br><span class="line">		<span class="keyword">if</span> (tokens[i].type == <span class="string">&#x27;*&#x27;</span> &amp;&amp; (i == <span class="number">0</span> || (tokens[i - <span class="number">1</span>].type != NUM &amp;&amp; tokens[i - <span class="number">1</span>].type != HEX &amp;&amp; tokens[i - <span class="number">1</span>].type != <span class="string">&#x27;)&#x27;</span>)))&#123;</span><br><span class="line">			tokens[i].type = POINT;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (tokens[i].type == <span class="string">&#x27;-&#x27;</span> &amp;&amp; (i == <span class="number">0</span> || (tokens[i - <span class="number">1</span>].type != NUM &amp;&amp; tokens[i - <span class="number">1</span>].type != HEX &amp;&amp; tokens[i - <span class="number">1</span>].type != <span class="string">&#x27;)&#x27;</span>)))&#123;</span><br><span class="line">			tokens[i].type = NEG;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> eval(<span class="number">0</span>, nr_token - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>判断token属于POINT还是NEG。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">cmd_p</span><span class="params">(<span class="keyword">char</span> *args)</span></span>&#123;</span><br><span class="line">	<span class="keyword">bool</span> *success = <span class="literal">false</span>;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	i = expr(args, success);</span><br><span class="line">	<span class="keyword">if</span> (!success)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, i);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加表达式求值打印的指令。</p>
+<h3 id="输出结果-2"><a href="#输出结果-2" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">(nemu) x 10 0x1234</span><br><span class="line">0x00000000 0x99848b66 0x00002000 0x0099a48a 0x8b000020 </span><br><span class="line">0x00123415 0x158b6600 0x00001234 0x1234158a 0x358a0000</span><br><span class="line">(nemu) p 0xc0100000 - (($edx+0x1234-10) * 16) / 4</span><br><span class="line">-1072711848</span><br><span class="line">(nemu) p (!($ecx != 0x00008000) &amp;&amp; ($eax == 0x00000000)) + 0x12345678 </span><br><span class="line">305419897</span><br><span class="line">(nemu) p -5 + *($eip)</span><br><span class="line">536904070</span><br><span class="line">(nemu) w ($eip==0x100224)</span><br><span class="line">Watch point 0: ($eip==0x100224)</span><br><span class="line">(nemu) c</span><br><span class="line">Hint watchpoint 0 at address 0x00100224</span><br></pre></td></tr></table></figure>
+
+<p><font size =2><center><b>注意：：上述测试命令是启动 nemu 并运行 100 步（si 100）之后输入的命令</b></center></font></p>
+<hr>
+<h2 id="必做任务-6：实现监视点池的管理"><a href="#必做任务-6：实现监视点池的管理" class="headerlink" title="必做任务 6：实现监视点池的管理"></a>必做任务 6：实现监视点池的管理</h2><p>这次的任务主要是对链表的相关操作进行一个复习。</p>
+<center><b>nemu/src/monitor/debug/watchpoint.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;nemu.h&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>添加头文件。</p>
+<center><b>nemu/src/monitor/debug/watchpoint.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function">WP* <span class="title">new_wp</span><span class="params">()</span></span>&#123;</span><br><span class="line">	WP *temp;</span><br><span class="line">	temp = free_;</span><br><span class="line">	free_ = free_-&gt;next;</span><br><span class="line">	temp-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">if</span> (head == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		head = temp;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		WP* temp2;</span><br><span class="line">		temp2 = head;</span><br><span class="line">		<span class="keyword">while</span> (temp2-&gt;next != <span class="literal">NULL</span>)&#123;</span><br><span class="line">			temp2 = temp2-&gt;next;</span><br><span class="line">		&#125;</span><br><span class="line">		temp2-&gt;next = temp;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写一个new_wp()，该函数用于从代码框架中的free_链表返回一个闲置的监视点结构。</p>
+<center><b>nemu/src/monitor/debug/watchpoint.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">free_wp</span><span class="params">(WP *wp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (wp == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		assert(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (wp == head)&#123;</span><br><span class="line">		head = head-&gt;next;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		WP* temp = head;</span><br><span class="line">		<span class="keyword">while</span> (temp != <span class="literal">NULL</span> &amp;&amp; temp-&gt;next != wp)&#123;</span><br><span class="line">			temp = temp-&gt;next;</span><br><span class="line">		&#125;</span><br><span class="line">		temp-&gt;next = temp-&gt;next-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	wp-&gt;next =free_;</span><br><span class="line">	free_ = wp;</span><br><span class="line">	wp-&gt;result = <span class="number">0</span>;</span><br><span class="line">	wp-&gt;expr[<span class="number">0</span>] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写一个free_wp()，将wp归还至free_链表当中。</p>
+<hr>
+<h2 id="必做任务-7：实现监视点"><a href="#必做任务-7：实现监视点" class="headerlink" title="必做任务 7：实现监视点"></a>必做任务 7：实现监视点</h2><p>实现类似GDB的监视点功能。</p>
+<center><b>nemu/src/monitor/debug/watchpoint.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">checkWP</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">bool</span> check = <span class="literal">false</span>;</span><br><span class="line">	<span class="keyword">bool</span> *success = <span class="literal">false</span>;</span><br><span class="line">	WP *temp = head;</span><br><span class="line">	<span class="keyword">int</span> expr_temp;</span><br><span class="line">	<span class="keyword">while</span>(temp != <span class="literal">NULL</span>)&#123;</span><br><span class="line">		expr_temp = expr(temp-&gt;expr, success);</span><br><span class="line">		<span class="keyword">if</span> (expr_temp != temp-&gt;result)&#123;</span><br><span class="line">			check = <span class="literal">true</span>;</span><br><span class="line">			<span class="built_in">printf</span> (<span class="string">&quot;Hint watchpoint %d at address 0x%08x\n&quot;</span>, temp-&gt;NO, cpu.eip);</span><br><span class="line">			temp = temp-&gt;next;</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">printf</span> (<span class="string">&quot;Watchpoint %d: %s\n&quot;</span>,temp-&gt;NO,temp-&gt;expr);</span><br><span class="line">		<span class="built_in">printf</span> (<span class="string">&quot;Old value = %d\n&quot;</span>,temp-&gt;result);</span><br><span class="line">		<span class="built_in">printf</span> (<span class="string">&quot;New value = %d\n&quot;</span>,expr_temp);</span><br><span class="line">		temp-&gt;result = expr_temp;</span><br><span class="line">		temp = temp-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> check;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写一个checkWP()函数，该函数用于判断监视点是否触发。首先进行表达式求值，每当NEMU执行完一条指令，则若触发了用户所设的监视点，程序便会暂停下来，否则打印监视点、旧值和新值。</p>
+<center><b>nemu/src/monitor/debug/cpu-exec.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* <span class="doctag">TODO:</span> check watchpoints here. */</span></span><br><span class="line"><span class="keyword">bool</span> change = checkWP();</span><br><span class="line"><span class="keyword">if</span> (change)&#123;</span><br><span class="line">	nemu_state = STOP;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>触发监视点后，更改nemu_state。</p>
+<center><b>nemu/src/monitor/debug/watchpoint.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printf_wp</span><span class="params">()</span></span>&#123;</span><br><span class="line">	WP *temp = head;</span><br><span class="line">	<span class="keyword">if</span> (temp == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;No watchpoints\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span> (temp != <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Watch point %d: %s\n&quot;</span>, temp-&gt;NO, temp-&gt;expr);</span><br><span class="line">		temp = temp-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单的链表输出操作。</p>
+<center><b>nemu/src/monitor/debug/ui.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function">WP* <span class="title">delete_wp</span><span class="params">(<span class="keyword">int</span> p, <span class="keyword">bool</span> *key)</span></span>&#123;</span><br><span class="line">	WP *temp = head;</span><br><span class="line">	<span class="keyword">while</span> (temp != <span class="literal">NULL</span> &amp;&amp; temp-&gt;NO != p)&#123;</span><br><span class="line">		temp = temp-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (temp == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		*key = <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单的链表删除操作。</p>
+<center><b>nemu/src/monitor/debug/ui.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125; cmd_table [] = &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">	&#123;<span class="string">&quot;w&quot;</span>, <span class="string">&quot;Watch point add&quot;</span>, cmd_w&#125;,</span><br><span class="line">	&#123;<span class="string">&quot;d&quot;</span>, <span class="string">&quot;Delete Watch point&quot;</span>, cmd_d&#125;,</span><br><span class="line">	<span class="comment">/* <span class="doctag">TODO:</span> Add more commands */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>添加所需要的指令。</p>
+<center><b>nemu/src/monitor/debug/ui.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">cmd_info</span><span class="params">(<span class="keyword">char</span> *args)</span></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">strcmp</span>(sencondWord, <span class="string">&quot;w&quot;</span>) == <span class="number">0</span>)&#123;</span><br><span class="line">		printf_wp();</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;MISINPUT\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在cmd_info()函数中添加判断，实现打印监视点的功能。</p>
+<center><b>nemu/src/monitor/debug/ui.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">cmd_d</span><span class="params">(<span class="keyword">char</span> *args)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> p;</span><br><span class="line">	<span class="keyword">bool</span> key = <span class="literal">true</span>;</span><br><span class="line">	<span class="built_in">sscanf</span>(args, <span class="string">&quot;%d&quot;</span>, &amp;p);</span><br><span class="line">	WP* q = delete_wp(p, &amp;key);</span><br><span class="line">	<span class="keyword">if</span> (key)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Delete watchpoint %d: %s\n&quot;</span>, q-&gt;NO, q-&gt;expr);</span><br><span class="line">		free_wp(q);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;No found watchpoint %d\n&quot;</span>, p);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加删除指令。</p>
+<h3 id="输出结果-3"><a href="#输出结果-3" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(nemu) info w</span><br><span class="line">No watchpoints</span><br><span class="line">(nemu) w 0x100000</span><br><span class="line">[nemu/src/monitor/debug/expr.c,98,make_token] match rules[6] = <span class="string">&quot;0[xX][0-9a-fA-F]+&quot;</span> at position 0 with len 8: 0x100000</span><br><span class="line">Watch point 0: 0x100000</span><br><span class="line">(nemu) si</span><br><span class="line">  100000:   bd 00 00 00 00                        movl <span class="variable">$0x0</span>,%ebp</span><br><span class="line">[nemu/src/monitor/debug/expr.c,98,make_token] match rules[6] = <span class="string">&quot;0[xX][0-9a-fA-F]+&quot;</span> at position 0 with len 8: 0x100000</span><br><span class="line">Watchpoint 0: 0x100000</span><br><span class="line">Old value = 0</span><br><span class="line">New value = 0</span><br><span class="line">(nemu) w 0x888888</span><br><span class="line">[nemu/src/monitor/debug/expr.c,98,make_token] match rules[6] = <span class="string">&quot;0[xX][0-9a-fA-F]+&quot;</span> at position 0 with len 8: 0x888888</span><br><span class="line">Watch point 1: 0x888888</span><br><span class="line">(nemu) info w</span><br><span class="line">Watch point 0: 0x100000</span><br><span class="line">Watch point 1: 0x888888</span><br><span class="line">(nemu) d 0</span><br><span class="line">Delete watchpoint 0: 0x100000</span><br><span class="line">(nemu) info w</span><br><span class="line">Watch point 1: 0x888888</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="任务自查表"><a href="#任务自查表" class="headerlink" title="任务自查表"></a>任务自查表</h2><table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">是否已完成</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">必做任务1</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">必做任务2</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">必做任务3</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">必做任务4</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">必做任务5</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">必做任务6</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">必做任务7</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">选做任务1</td>
+<td align="center">是</td>
+</tr>
+<tr>
+<td align="center">选做任务2</td>
+<td align="center">是</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="思考题"><a href="#思考题" class="headerlink" title="思考题"></a>思考题</h2><table><tr><td bgcolor=red><center><b>思考题仅作为个人思考，若有错误欢迎指出</a>。</b></center></td></tr></table>
+
+<h3 id="思考题1：opcode-table-到底是一个什么类型的数组？"><a href="#思考题1：opcode-table-到底是一个什么类型的数组？" class="headerlink" title="思考题1：opcode_table 到底是一个什么类型的数组？"></a><b>思考题1：opcode_table 到底是一个什么类型的数组？</b></h3><blockquote>
+<p>opcode_table 数组是一个函数指针数组。</p>
+</blockquote>
+<h3 id="思考题2（1）：在-cmd-c-函数中-调用-cpu-exec-的时候传入了参数-1-你知道为什么吗"><a href="#思考题2（1）：在-cmd-c-函数中-调用-cpu-exec-的时候传入了参数-1-你知道为什么吗" class="headerlink" title="思考题2（1）：在 cmd_c()函数中, 调用 cpu_exec()的时候传入了参数-1 , 你知道为什么吗?"></a><b>思考题2（1）：在 cmd_c()函数中, 调用 cpu_exec()的时候传入了参数-1 , 你知道为什么吗?</b></h3><blockquote>
+<p>-1是无符号类型最大的数字，所以函数里的for循环可以执行所以指令。</p>
+</blockquote>
+<h3 id="思考题2（2）：框架代码中定义-wp-pool-等变量的时候使用了关键字-static，static-在此处-的含义是什么-为什么要在此处使用它"><a href="#思考题2（2）：框架代码中定义-wp-pool-等变量的时候使用了关键字-static，static-在此处-的含义是什么-为什么要在此处使用它" class="headerlink" title="思考题2（2）：框架代码中定义 wp_pool 等变量的时候使用了关键字 static，static 在此处 的含义是什么? 为什么要在此处使用它?"></a><b>思考题2（2）：框架代码中定义 wp_pool 等变量的时候使用了关键字 static，static 在此处 的含义是什么? 为什么要在此处使用它?</b></h3><blockquote>
+<p>在此处的含义是静态全局变量，该变量只能被本文件中的函数调用，并且是全局变量，而不能被同一程序其他文件中的函数调用，使用static是为了避免它被误修改。</p>
+</blockquote>
+<h3 id="思考题3："><a href="#思考题3：" class="headerlink" title="思考题3："></a><b>思考题3：</b></h3><ul>
+<li><b>EFLAGS 寄存器中的 CF 位是什么意思?</b></li>
+</ul>
+<blockquote>
+<p>i386手册里P34页中和参阅附录c提到，CF是进位标志。</p>
+</blockquote>
+<ul>
+<li><b>ModR/M 字节是什么?</b></li>
+</ul>
+<blockquote>
+<p>P241-243页。ModR/M 由 Mod，Reg/Opcode，R/M 三个部分组成。 Mod 是前两位，提供寄存器寻址和内存寻址， Reg/Opcode为3-5位，如果是Reg表示使用哪个寄存器，Opcode表示对group属性的Opcode进行补充； R/M为6-8位，与mod结合起来会得到8个寄存器和24个内存寻址。</p>
+</blockquote>
+<ul>
+<li> <b>mov 指令的具体格式是怎么样的?</b></li>
+</ul>
+<blockquote>
+<p>P345页，格式是DEST ← SRC。</p>
+</blockquote>
+<ul>
+<li><b>完成 PA1 的内容之后, nemu 目录下的所有.c 和.h 和文件总 共有多少行代码? 你是使用什么命令得到这个结果的？和框架代码相 比, 你在 PA1 中编写了多少行代码？你可以把这条命令写入 Makefile 中, 随着实验进度的推进, 你可以很方便地统计工程的代码行数, 例如 敲入 make count 就会自动运行统计代码行数的命令。再来个难一点的,  除去空行之外, nemu 目录下的所有.c 和.h 文件总共有多少行代码？</b></li>
+</ul>
+<blockquote>
+<p>通过find . -name “*[.h/.c]” | xargs wc -l命令，得到4803行。和框架代码4197行相比, 我在 PA1 中编写了606行代码。</p>
+<p>通过find . -name “*[.h/.c]” | xargs grep “^.” | wc -l命令计算去除空行的所有.c .h文件得到了3900行代码。</p>
+<p>make count指令如下：</p>
+<p>make count </p>
+<p>​    @find nemu/ -name “<em>.c” -o -name “</em>.h” | xargs cat | grep -v ^$$ | wc -l </p>
+</blockquote>
+<ul>
+<li><b>打开工程目录下的 Makefile 文件, 你会在 CFLAGS 变量中看到 gcc 的一些编译选项。请解释 gcc 中的-Wall 和-Werror 有什么作用? 为 什么要使用-Wall 和-Werror？</b></li>
+</ul>
+<blockquote>
+<p>-Wall 使GCC编译后显示所有的警告信息。 -Werror 会将将所有的警告当成错误进行处理，并且取消编译操作。 使用 -Wall 和 -Werror就是为了找出可能存在的错误，尽可能地避免程序运行出错，优化程序。</p>
+</blockquote>
+<hr>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>PA1只要学过c语言基本上实现没什么难度，主要是要对代码框架的理解。</p>
+<br>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>aa10n
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/" title="NEMU PA1 详解">https://aa10n.github.io/计算机系统基础大作业/NEMUPA1/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/NEMU/" rel="tag"><i class="fa fa-tag"></i> NEMU</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/" rel="next" title="NEMU PA2 详解 (更新中)">
+                  NEMU PA2 详解 (更新中) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-plug"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">aa10n</span>
+</div>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+
+</body>
+</html>
