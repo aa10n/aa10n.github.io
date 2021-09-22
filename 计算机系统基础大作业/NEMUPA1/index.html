@@ -22,15 +22,15 @@
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"aa10n.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":20},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。   NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的">
+<meta name="description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。  NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NEMU PA1 详解">
 <meta property="og:url" content="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/index.html">
 <meta property="og:site_name" content="aa10n&#39;s blog">
-<meta property="og:description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。   NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的">
+<meta property="og:description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。  NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-20T18:46:10.000Z">
-<meta property="article:modified_time" content="2021-09-22T17:27:33.121Z">
+<meta property="article:modified_time" content="2021-09-22T18:48:43.880Z">
 <meta property="article:author" content="aa10n">
 <meta property="article:tag" content="NEMU">
 <meta name="twitter:card" content="summary">
@@ -251,7 +251,6 @@
     <div class="post-body" itemprop="articleBody">
         <table><tr><td bgcolor=red><center><b>在阅读本文前，务必自行阅读一遍南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
 
-<hr>
 <h2 id="NEMU-是什么"><a href="#NEMU-是什么" class="headerlink" title="NEMU 是什么?"></a><center><font size=6>NEMU 是什么?</font></center></h2><p>这是实验指导书中的一段描述。</p>
 <blockquote>
 <p><font size=3><i>PA的目的是要实现NEMU, 一款经过简化的全系统模拟器.</p>
@@ -262,7 +261,7 @@
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
 <li><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
 </li>
-<li><p>PA1几乎没有涉及到任何的计算机基础知识。我认为PA1是对写代码进行一个热身，把一些不太熟悉的操作再次学习。</p>
+<li><p>PA1几乎没有涉及到任何的计算机系统基础知识。我认为PA1是对写代码进行一个热身，把一些不太熟悉的操作再次学习。</p>
 </li>
 <li><p><b>代码框架请自行理解，实验指导书中已经详细说明了。</b></p>
 </li>

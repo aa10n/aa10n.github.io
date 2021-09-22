@@ -5,11 +5,10 @@
     <url>/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/</url>
     <content><![CDATA[<table><tr><td bgcolor=red><center><b>在阅读本文前，务必自行阅读一遍南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
 
-<hr>
 <h2 id="x86-指令系统"><a href="#x86-指令系统" class="headerlink" title="x86 指令系统"></a><center><font size=6>x86 指令系统</font></center></h2><p>PA2的任务是实现基本x86指令，i386手册——<a href="http://css.csail.mit.edu/6.858/2013/readings/i386.pdf">INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)</a>里很全面地列出了所有指令的细节。如果遇到任何问题，RTFM——<b>READ THE FUCKING MANUAL</b>基本上能解决你一切的问题。</p>
 <span id="more"></span>
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次实验目的是为了能够了解汇编语言中指令的各处细节，掌握IA-32指令格式，并且对NEMU平台中的指令周期了解地更加全面。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次实验目的是为了能够了解汇编语言中指令的各处细节，掌握IA-32指令格式，并且对NEMU平台中的指令周期了解地更加全面。PA2就会开始涉及到一些计算机系统基础的知识。</p>
 <h2 id="实验内容："><a href="#实验内容：" class="headerlink" title="实验内容："></a>实验内容：</h2><ul>
 <li>阶段 1: 编写 helper 函数, 在 NEMU 中运行第一个 C 程序——mov-c.c</li>
 <li>阶段 2: 实现更多的指令，并通过测试</li>
@@ -18,12 +17,43 @@
 <li>最后阶段: 实现黑客运行时劫持实验（选做）</li>
 </ul>
 <h2 id="开始实验"><a href="#开始实验" class="headerlink" title="开始实验"></a><center><font size=6>开始实验</font></center></h2><hr>
-<h2 id="必做任务-1：运行用户程序-mov-c"><a href="#必做任务-1：运行用户程序-mov-c" class="headerlink" title="必做任务 1：运行用户程序 mov-c"></a>必做任务 1：运行用户程序 mov-c</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">USERPROG := obj/testcase/mov-c</span><br><span class="line">ENTRY := $(USERPROG)</span><br></pre></td></tr></table></figure>
+<h2 id="必做任务-1：运行用户程序-mov-c"><a href="#必做任务-1：运行用户程序-mov-c" class="headerlink" title="必做任务 1：运行用户程序 mov-c"></a>必做任务 1：运行用户程序 mov-c</h2><center><b>Makefile</b></center>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">USERPROG := obj/testcase/mov-c</span><br><span class="line">ENTRY := $(USERPROG)</span><br></pre></td></tr></table></figure>
 
 <p>修改NEMU根目录下Make File中的用户程序。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(nemu) c</span><br><span class="line">invalid opcode(eip = 0x001012c5): e8 c6 fe ff ff e8 d1 fe ...</span><br><span class="line"></span><br><span class="line">There are two cases <span class="built_in">which</span> will trigger this unexpected exception:</span><br><span class="line">1. The instruction at eip = 0x001012c5 is not implemented.</span><br><span class="line">2. Something is implemented incorrectly.</span><br><span class="line">Find this eip value(0x001012c5) <span class="keyword">in</span> the disassembling result to distinguish <span class="built_in">which</span> <span class="keyword">case</span> it is.</span><br><span class="line"></span><br><span class="line">If it is the first <span class="keyword">case</span>, see</span><br><span class="line"> _ ____   ___    __    __  __                         _ </span><br><span class="line">(_)___ \ / _ \  / /   |  \/  |                       | |</span><br><span class="line"> _  __) | (_) |/ /_   | \  / | __ _ _ __  _   _  __ _| |</span><br><span class="line">| ||__ &lt; &gt; _ &lt;| <span class="string">&#x27;_ \  | |\/| |/ _` | &#x27;</span>_ \| | | |/ _` | |</span><br><span class="line">| |___) | (_) | (_) | | |  | | (_| | | | | |_| | (_| | |</span><br><span class="line">|_|____/ \___/ \___/  |_|  |_|\__,_|_| |_|\__,_|\__,_|_|</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> more details.</span><br><span class="line"></span><br><span class="line">If it is the second <span class="keyword">case</span>, remember:</span><br><span class="line">* The machine is always right!</span><br><span class="line">* Every line of untested code is always wrong!</span><br><span class="line"></span><br><span class="line">nemu: nemu/src/cpu/<span class="built_in">exec</span>/special/special.c:24: inv: Assertion `0<span class="string">&#x27; failed.</span></span><br><span class="line"><span class="string">Makefile:63: recipe for target &#x27;</span>run<span class="string">&#x27; fail</span></span><br></pre></td></tr></table></figure>
+<h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(nemu) c</span><br><span class="line">invalid opcode(eip = 0x001012c5): e8 c6 fe ff ff e8 d1 fe ...</span><br><span class="line"></span><br><span class="line">There are two cases <span class="built_in">which</span> will trigger this unexpected exception:</span><br><span class="line">1. The instruction at eip = 0x001012c5 is not implemented.</span><br><span class="line">2. Something is implemented incorrectly.</span><br><span class="line">Find this eip value(0x001012c5) <span class="keyword">in</span> the disassembling result to distinguish <span class="built_in">which</span> <span class="keyword">case</span> it is.</span><br><span class="line"></span><br><span class="line">If it is the first <span class="keyword">case</span>, see</span><br><span class="line"> _ ____   ___    __    __  __                         _ </span><br><span class="line">(_)___ \ / _ \  / /   |  \/  |                       | |</span><br><span class="line"> _  __) | (_) |/ /_   | \  / | __ _ _ __  _   _  __ _| |</span><br><span class="line">| ||__ &lt; &gt; _ &lt;| <span class="string">&#x27;_ \  | |\/| |/ _` | &#x27;</span>_ \| | | |/ _` | |</span><br><span class="line">| |___) | (_) | (_) | | |  | | (_| | | | | |_| | (_| | |</span><br><span class="line">|_|____/ \___/ \___/  |_|  |_|\__,_|_| |_|\__,_|\__,_|_|</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> more details.</span><br><span class="line"></span><br><span class="line">If it is the second <span class="keyword">case</span>, remember:</span><br><span class="line">* The machine is always right!</span><br><span class="line">* Every line of untested code is always wrong!</span><br><span class="line"></span><br><span class="line">nemu: nemu/src/cpu/<span class="built_in">exec</span>/special/special.c:24: inv: Assertion `0<span class="string">&#x27; failed.</span></span><br><span class="line"><span class="string">Makefile:63: recipe for target &#x27;</span>run<span class="string">&#x27; fail</span></span><br></pre></td></tr></table></figure>
 
 <p>执行NEMU后会发现报错，错误原因是还没有实现0xe8为首字节的指令。</p>
+<h2 id="实现指令"><a href="#实现指令" class="headerlink" title="实现指令"></a>实现指令</h2><p>实现指令需要创建三个文件，分别为</p>
+<ul>
+<li>xxx-template.h</li>
+<li>xxx.c</li>
+<li>xxx.h</li>
+</ul>
+<h3 id="实现call指令"><a href="#实现call指令" class="headerlink" title="实现call指令"></a>实现call指令</h3><center><b>nemu/src/cpu/exec/control/call-template.h</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;cpu/exec/template-start.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> instr call</span></span><br><span class="line"></span><br><span class="line">make_helper(concat(call_i_, SUFFIX)) &#123;</span><br><span class="line">    <span class="keyword">int</span> len = concat(decode_i_, SUFFIX)(cpu.eip + <span class="number">1</span>); <span class="comment">//calculate the length of instr (include opcode)</span></span><br><span class="line">    reg_l(R_ESP) -= DATA_BYTE; <span class="comment">//esp - 4 (push)</span></span><br><span class="line">    swaddr_write(reg_l(R_ESP), <span class="number">4</span>, cpu.eip + len + <span class="number">1</span>); <span class="comment">//write current eip next address to esp (mov)</span></span><br><span class="line">    <span class="comment">//current_sreg = R_SS;</span></span><br><span class="line">    DATA_TYPE_S imm = op_src -&gt; val; <span class="comment">//length from eip to function</span></span><br><span class="line">    print_asm(<span class="string">&quot;call\t%x&quot;</span>,cpu.eip + <span class="number">1</span> + len + imm); </span><br><span class="line">    cpu.eip += imm; <span class="comment">// eip update</span></span><br><span class="line">    <span class="keyword">return</span> len + <span class="number">1</span>; <span class="comment">// return opcode + behind</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">make_helper(concat(call_rm_, SUFFIX))&#123;</span><br><span class="line">    <span class="keyword">int</span> len = concat(decode_rm_, SUFFIX)(cpu.eip + <span class="number">1</span>);</span><br><span class="line">    reg_l(R_ESP) -= DATA_BYTE;</span><br><span class="line">    swaddr_write(reg_l(R_ESP) , <span class="number">4</span>, cpu.eip + len + <span class="number">1</span>);</span><br><span class="line">    <span class="comment">//current_sreg = R_SS;</span></span><br><span class="line">    DATA_TYPE_S imm = op_src -&gt; val;</span><br><span class="line">    print_asm(<span class="string">&quot;call %x&quot;</span>,imm);</span><br><span class="line">    cpu.eip = imm - len - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> len + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;cpu/exec/template-end.h&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>编写call指令模板文件。call指令可以化成三个步骤。</p>
+<ul>
+<li>esp = esp - DATA_BYTE，栈空出一个位置。</li>
+<li>[esp] = 返回地址 ，把返回地址压入栈中。</li>
+<li>eip跳转到函数地址。</li>
+</ul>
+<blockquote>
+<p>这里其实涉及了对帧指针EBP、栈指针ESP、函数调用以及对栈帧的理解，不了解的话随便STFW就有相关文章的解释。</p>
+</blockquote>
+<center><b>nemu/src/cpu/exec/control/call.c</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;cpu/exec/helper.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DATA_BYTE 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;call-template.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> DATA_BYTE</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DATA_BYTE 2</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;call-template.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> DATA_BYTE</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DATA_BYTE 4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;call-template.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> DATA_BYTE</span></span><br><span class="line"></span><br><span class="line">make_helper_v(call_i)</span><br><span class="line">make_helper_v(call_rm)</span><br></pre></td></tr></table></figure>
+
+<p>编写call指令实例化文件。</p>
+<center><b>nemu/src/cpu/exec/control/call.h</b></center>
+
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;cpu/exec/helper.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">make_helper(call_i_v);</span><br><span class="line"></span><br><span class="line">make_helper(call_rm_v);</span><br></pre></td></tr></table></figure>
+
+<p>编写call指令头文件。</p>
 ]]></content>
       <categories>
         <category>计算机系统基础大作业</category>
@@ -37,7 +67,6 @@
     <url>/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/</url>
     <content><![CDATA[<table><tr><td bgcolor=red><center><b>在阅读本文前，务必自行阅读一遍南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
 
-<hr>
 <h2 id="NEMU-是什么"><a href="#NEMU-是什么" class="headerlink" title="NEMU 是什么?"></a><center><font size=6>NEMU 是什么?</font></center></h2><p>这是实验指导书中的一段描述。</p>
 <blockquote>
 <p><font size=3><i>PA的目的是要实现NEMU, 一款经过简化的全系统模拟器.</p>
@@ -48,7 +77,7 @@
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
 <li><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
 </li>
-<li><p>PA1几乎没有涉及到任何的计算机基础知识。我认为PA1是对写代码进行一个热身，把一些不太熟悉的操作再次学习。</p>
+<li><p>PA1几乎没有涉及到任何的计算机系统基础知识。我认为PA1是对写代码进行一个热身，把一些不太熟悉的操作再次学习。</p>
 </li>
 <li><p><b>代码框架请自行理解，实验指导书中已经详细说明了。</b></p>
 </li>
