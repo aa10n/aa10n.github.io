@@ -30,7 +30,7 @@
 <meta property="og:description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。  x86 指令系统PA2的任务是实现基本x86指令，i386手册——INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)里很全面地列出了所有指令的细节。如果遇到任何问题，RTFM——READ THE FUCKING MANUAL基本上能解决你一切的问题。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-22T14:22:12.000Z">
-<meta property="article:modified_time" content="2021-09-23T02:05:16.958Z">
+<meta property="article:modified_time" content="2021-09-23T02:34:01.306Z">
 <meta property="article:author" content="aa10n">
 <meta property="article:tag" content="NEMU">
 <meta name="twitter:card" content="summary">
@@ -271,24 +271,26 @@
 <h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(nemu) c</span><br><span class="line">invalid opcode(eip = 0x001012c5): e8 c6 fe ff ff e8 d1 fe ...</span><br><span class="line"></span><br><span class="line">There are two cases <span class="built_in">which</span> will trigger this unexpected exception:</span><br><span class="line">1. The instruction at eip = 0x001012c5 is not implemented.</span><br><span class="line">2. Something is implemented incorrectly.</span><br><span class="line">Find this eip value(0x001012c5) <span class="keyword">in</span> the disassembling result to distinguish <span class="built_in">which</span> <span class="keyword">case</span> it is.</span><br><span class="line"></span><br><span class="line">If it is the first <span class="keyword">case</span>, see</span><br><span class="line"> _ ____   ___    __    __  __                         _ </span><br><span class="line">(_)___ \ / _ \  / /   |  \/  |                       | |</span><br><span class="line"> _  __) | (_) |/ /_   | \  / | __ _ _ __  _   _  __ _| |</span><br><span class="line">| ||__ &lt; &gt; _ &lt;| <span class="string">&#x27;_ \  | |\/| |/ _` | &#x27;</span>_ \| | | |/ _` | |</span><br><span class="line">| |___) | (_) | (_) | | |  | | (_| | | | | |_| | (_| | |</span><br><span class="line">|_|____/ \___/ \___/  |_|  |_|\__,_|_| |_|\__,_|\__,_|_|</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> more details.</span><br><span class="line"></span><br><span class="line">If it is the second <span class="keyword">case</span>, remember:</span><br><span class="line">* The machine is always right!</span><br><span class="line">* Every line of untested code is always wrong!</span><br><span class="line"></span><br><span class="line">nemu: nemu/src/cpu/<span class="built_in">exec</span>/special/special.c:24: inv: Assertion `0<span class="string">&#x27; failed.</span></span><br><span class="line"><span class="string">Makefile:63: recipe for target &#x27;</span>run<span class="string">&#x27; fail</span></span><br></pre></td></tr></table></figure>
 
 <p>执行NEMU后会发现报错，错误原因是还没有实现0xe8为首字节的指令。</p>
-<h2 id="实现指令"><a href="#实现指令" class="headerlink" title="实现指令"></a>实现指令</h2><p>实现指令需要创建三个文件，分别为</p>
+<h2 id="实现指令"><a href="#实现指令" class="headerlink" title="实现指令"></a>实现指令</h2><p>首先需要查找i386手册中指令的相关篇幅，通过指令的opcode决定指令的具体形式。之后根据实验给出的代码框架，实现指令需要创建三个文件，分别为</p>
 <ul>
 <li>xxx-template.h</li>
 <li>xxx.c</li>
 <li>xxx.h</li>
 </ul>
+<p><b>PA2代码框架中所定义的宏极为重要，在实现指令时可以省去很多重复的步骤，需要仔细阅读实验指导书并且理解。</b></p>
 <h3 id="实现call指令"><a href="#实现call指令" class="headerlink" title="实现call指令"></a>实现call指令</h3><center><b>nemu/src/cpu/exec/control/call-template.h</b></center>
 
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;cpu/exec/template-start.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> instr call</span></span><br><span class="line"></span><br><span class="line">make_helper(concat(call_i_, SUFFIX)) &#123;</span><br><span class="line">    <span class="keyword">int</span> len = concat(decode_i_, SUFFIX)(cpu.eip + <span class="number">1</span>); <span class="comment">//calculate the length of instr (include opcode)</span></span><br><span class="line">    reg_l(R_ESP) -= DATA_BYTE; <span class="comment">//esp - 4 (push)</span></span><br><span class="line">    swaddr_write(reg_l(R_ESP), <span class="number">4</span>, cpu.eip + len + <span class="number">1</span>); <span class="comment">//write current eip next address to esp (mov)</span></span><br><span class="line">    <span class="comment">//current_sreg = R_SS;</span></span><br><span class="line">    DATA_TYPE_S imm = op_src -&gt; val; <span class="comment">//length from eip to function</span></span><br><span class="line">    print_asm(<span class="string">&quot;call\t%x&quot;</span>,cpu.eip + <span class="number">1</span> + len + imm); </span><br><span class="line">    cpu.eip += imm; <span class="comment">// eip update</span></span><br><span class="line">    <span class="keyword">return</span> len + <span class="number">1</span>; <span class="comment">// return opcode + behind</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">make_helper(concat(call_rm_, SUFFIX))&#123;</span><br><span class="line">    <span class="keyword">int</span> len = concat(decode_rm_, SUFFIX)(cpu.eip + <span class="number">1</span>);</span><br><span class="line">    reg_l(R_ESP) -= DATA_BYTE;</span><br><span class="line">    swaddr_write(reg_l(R_ESP) , <span class="number">4</span>, cpu.eip + len + <span class="number">1</span>);</span><br><span class="line">    <span class="comment">//current_sreg = R_SS;</span></span><br><span class="line">    DATA_TYPE_S imm = op_src -&gt; val;</span><br><span class="line">    print_asm(<span class="string">&quot;call %x&quot;</span>,imm);</span><br><span class="line">    cpu.eip = imm - len - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> len + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;cpu/exec/template-end.h&quot;</span></span></span><br></pre></td></tr></table></figure>
 
-<p>编写call指令模板文件。call指令可以化成三个步骤。</p>
+<p>编写call指令模板文件。call指令可以大致分成三个步骤。</p>
 <ul>
-<li>esp = esp - DATA_BYTE，栈空出一个位置。</li>
+<li>esp = esp - DATA_BYTE，栈腾出位置。</li>
 <li>[esp] = 返回地址 ，把返回地址压入栈中。</li>
 <li>eip跳转到函数地址。</li>
 </ul>
 <blockquote>
-<p>这里其实涉及了对帧指针EBP、栈指针ESP、函数调用以及对栈帧的理解。</p>
+<p>这里其实涉及了对指针ESP、帧指针EBP、栈函数调用栈、栈帧等各方面的理解。栈指针ESP永远指向系统栈中最上面一个栈帧的栈顶，而帧指针EBP则永远指向系统战中最上面一个栈帧的栈底，这两个指针的作用主要是用来保存（或恢复）堆栈。</p>
+<p>具体可参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/TuxedoLinux/article/details/100921994">栈帧ebp,esp详解_TuxedoLinux的博客-CSDN博客</a></p>
 </blockquote>
 <center><b>nemu/src/cpu/exec/control/call.c</b></center>
 
@@ -300,6 +302,7 @@
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;cpu/exec/helper.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">make_helper(call_i_v);</span><br><span class="line"></span><br><span class="line">make_helper(call_rm_v);</span><br></pre></td></tr></table></figure>
 
 <p>编写call指令头文件。</p>
+<br>
 
     </div>
 
