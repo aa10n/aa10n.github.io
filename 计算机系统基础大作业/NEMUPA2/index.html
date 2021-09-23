@@ -30,7 +30,7 @@
 <meta property="og:description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。  x86 指令系统PA2的任务是实现基本x86指令，i386手册——INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)里很全面地列出了所有指令的细节。如果遇到任何问题，RTFM——READ THE FUCKING MANUAL基本上能解决你一切的问题。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-22T14:22:12.000Z">
-<meta property="article:modified_time" content="2021-09-22T18:51:12.094Z">
+<meta property="article:modified_time" content="2021-09-23T02:05:16.958Z">
 <meta property="article:author" content="aa10n">
 <meta property="article:tag" content="NEMU">
 <meta name="twitter:card" content="summary">
@@ -288,7 +288,7 @@
 <li>eip跳转到函数地址。</li>
 </ul>
 <blockquote>
-<p>这里其实涉及了对帧指针EBP、栈指针ESP、函数调用以及对栈帧的理解，不了解的话随便STFW就有相关文章的解释。</p>
+<p>这里其实涉及了对帧指针EBP、栈指针ESP、函数调用以及对栈帧的理解。</p>
 </blockquote>
 <center><b>nemu/src/cpu/exec/control/call.c</b></center>
 

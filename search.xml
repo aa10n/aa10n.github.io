@@ -42,7 +42,7 @@
 <li>eip跳转到函数地址。</li>
 </ul>
 <blockquote>
-<p>这里其实涉及了对帧指针EBP、栈指针ESP、函数调用以及对栈帧的理解，不了解的话随便STFW就有相关文章的解释。</p>
+<p>这里其实涉及了对帧指针EBP、栈指针ESP、函数调用以及对栈帧的理解。</p>
 </blockquote>
 <center><b>nemu/src/cpu/exec/control/call.c</b></center>
 
