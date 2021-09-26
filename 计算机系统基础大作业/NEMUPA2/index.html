@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/09/27/8FBG6UvHwaRQxkf.png">
 <meta property="og:image" content="https://i.loli.net/2021/09/27/WqXkFDJhBmsj2aC.png">
 <meta property="article:published_time" content="2021-09-22T14:22:12.000Z">
-<meta property="article:modified_time" content="2021-09-26T20:24:52.042Z">
+<meta property="article:modified_time" content="2021-09-26T20:36:09.317Z">
 <meta property="article:author" content="aa10n">
 <meta property="article:tag" content="NEMU">
 <meta name="twitter:card" content="summary">
@@ -283,11 +283,11 @@
 <center><b>MOV</b></center>
 
 <p><img src="https://i.loli.net/2021/09/27/odJSiul48aTM61Q.png"></p>
-<p>i386手册里的都是Intel格式，objdump的默认格式为AT&amp;T。这里以mov为例，功能描述里r/m表示时寄存器或内存，r/m后面的数值表示为多少位的寄存器，Opcode为89的有两种形式，而前面提到Opcode有个前缀就是用来区分16位和32位的，例如开始如果出现66 89，则应该被解释成MOV r/m16,r16。Sreg表示段寄存器，moffs表示段内偏移，段的概念会以后提到。+rb +rw +rd则表示8位，16位，32位寄存器，可以通过按数值加法来确定唯一的寄存器。</p>
+<p>i386手册里的都是Intel格式，objdump的默认格式为AT&amp;T。这里以mov为例，功能描述里r/m表示时寄存器或内存，r/m后面的数值表示为多少位的寄存器，Opcode为89的有两种形式，而前面提到Opcode前缀就是用来区分16位和32位的，例如开始如果出现66 8B，则应该被解释成MOV r16,r/m16。Sreg表示段寄存器，moffs表示段内偏移，段的概念会以后提到。+rb +rw +rd则表示8位，16位，32位寄存器，可以通过按数值加法来确定唯一的寄存器。</p>
 <center><b>ModR/M Table</b></center>
 
 <p><img src="https://i.loli.net/2021/09/27/8FBG6UvHwaRQxkf.png" alt="pa2-1.png"></p>
-<p>ModR/M域分成三个部分，Mod为2位，所以Mod可以指定四种寻址方式，每一种选择里还对应着不同的选择，这些便是由R/M来决定，而R/M为3位，所以又可以选择8种寻址方式。所以Mod + R/M可以组合成32种寻址方式，其中为8种为寄存器寻址，另24种为存储器寻址。Reg/Opcode则可以表示成8个寄存器或者对于Opcode的一个补充。以上为32位ModR/M的表。</p>
+<p>ModR/M域分成三个部分，Mod为2位，所以Mod可以指定4种寻址方式，每一种选择里还对应着不同的选择，这些便是由R/M来决定，而R/M为3位，所以又可以选择8种寻址方式。所以Mod + R/M可以组合成32种寻址方式，其中为8种为寄存器寻址，另24种为存储器寻址。Reg/Opcode则可以表示成8个寄存器或者对于Opcode的一个补充。以上为32位ModR/M的表。</p>
 <center><b>SIB Table</b></center>
 
 <p><img src="https://i.loli.net/2021/09/27/WqXkFDJhBmsj2aC.png" alt="image.png"></p>
@@ -297,12 +297,12 @@
 <p>至于Displacement和Immediate则分别表示成偏移数和立即数，这两个都是按照小端序排列。例如，mov 0x1a2b[ebx + eax * 2], ecx ，其中的0x1a2b表示Displacement。</p>
 <table><tr><td bgcolor=red><center><b>这里的图给出的都是还未被修正过的，图中画蓝线的部分是错误的，需要自行对照勘误表</a></b></center></td></tr></table>
 
-<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>由于一个字节为8位，最多只能表示成256个形式，一旦指令形式的数目大于256时，这时候就需要用到转移码的概念或者利用ModR/M的Reg/Opcode中的Opcode来补充指令。</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>由于一个字节为8位，最多只能表示成256个形式，一旦指令形式的数目大于256时，这时候就需要用到转移码的概念或者利用Reg/Opcode中的Opcode来补充指令。</p>
 <ul>
 <li>x86中分别有两字节转移码和三字节转移码，当Opcode前一个字节为0x0f或者前两个字节为0x0f和0x38的时候，表示需要再读入一个字节来确定唯一的指令形式。</li>
 <li>当Reg/Opcode域被当作Opcode来解释的时候，这些指令会被划分为不同的指令组，在同一个指令组的指令则需要通过Reg/Opcode域中的Opcode来唯一确定。</li>
 </ul>
-<h2 id="实现指令"><a href="#实现指令" class="headerlink" title="实现指令"></a>实现指令</h2><p>首先需要查找i386手册中指令的相关篇幅，通过指令的opcode决定指令的具体形式。之后根据实验给出的代码框架，实现指令需要创建三个文件，分别为</p>
+<h2 id="实现指令"><a href="#实现指令" class="headerlink" title="实现指令"></a>实现指令</h2><p>首先需要查找i386手册中指令的相关篇幅，通过指令的Opcode决定指令的具体形式。之后根据实验给出的代码框架，实现指令需要创建三个文件，分别为</p>
 <ul>
 <li>xxx-template.h</li>
 <li>xxx.c</li>
