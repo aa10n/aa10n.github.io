@@ -22,15 +22,15 @@
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"aa10n.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":20},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。  NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横">
+<meta name="description" content="NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NEMU PA1 详解">
+<meta property="og:title" content="计算机系统基础大作业 NEMU PA1">
 <meta property="og:url" content="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/index.html">
 <meta property="og:site_name" content="aa10n&#39;s blog">
-<meta property="og:description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。  NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横">
+<meta property="og:description" content="NEMU 是什么?这是实验指导书中的一段描述。  PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-20T18:46:10.000Z">
-<meta property="article:modified_time" content="2021-09-24T06:10:02.219Z">
+<meta property="article:modified_time" content="2021-09-26T06:57:14.311Z">
 <meta property="article:author" content="aa10n">
 <meta property="article:tag" content="NEMU">
 <meta name="twitter:card" content="summary">
@@ -40,10 +40,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/","path":"计算机系统基础大作业/NEMUPA1/","title":"NEMU PA1 详解"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/","path":"计算机系统基础大作业/NEMUPA1/","title":"计算机系统基础大作业 NEMU PA1"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>NEMU PA1 详解 | aa10n's blog</title>
+<title>计算机系统基础大作业 NEMU PA1 | aa10n's blog</title>
   
 
 
@@ -216,7 +216,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          NEMU PA1 详解
+          计算机系统基础大作业 NEMU PA1
         </h1>
 
         <div class="post-meta-container">
@@ -249,23 +249,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <table><tr><td bgcolor=red><center><b>在阅读本文前，务必自行阅读一遍南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
-
-<h2 id="NEMU-是什么"><a href="#NEMU-是什么" class="headerlink" title="NEMU 是什么?"></a><center><font size=6>NEMU 是什么?</font></center></h2><p>这是实验指导书中的一段描述。</p>
+        <h2 id="NEMU-是什么"><a href="#NEMU-是什么" class="headerlink" title="NEMU 是什么?"></a><center><font size=6>NEMU 是什么?</font></center></h2><p>这是实验指导书中的一段描述。</p>
 <blockquote>
 <p><font size=3><i>PA的目的是要实现NEMU, 一款经过简化的全系统模拟器.</p>
 <p>但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以为你模拟出红白机的所有功能. 有了它, 你就好像有了一个真正的红白机, 可以玩你最喜欢的红白机游戏. <a target="_blank" rel="noopener" href="https://github.com/NJU-ProjectN/litenes">这里</a>是jyy移植的一个小型项目LiteNES, PA工程里面已经带有这个项目, 你可以在如今这个红白机难以寻觅的时代, 再次回味你儿时的快乐时光, 这实在是太神奇了!</i></front></p>
 </blockquote>
 <span id="more"></span>
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
-<li><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
-</li>
-<li><p>PA1几乎没有涉及到任何的计算机系统基础知识。我认为PA1是对写代码进行一个热身，把一些不太熟悉的操作再次学习。</p>
-</li>
-<li><p><b>代码框架请自行理解，实验指导书中已经详细说明了。</b></p>
-</li>
-</ul>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
+<table><tr><td bgcolor=red><center><b>南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
+
 <hr>
 <h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>NEMU 是基于 Linux/GNU 实验环境，所需要的环境如下：</p>
 <ul>
@@ -526,7 +519,7 @@
 <p>-Wall 使GCC编译后显示所有的警告信息。 -Werror 会将将所有的警告当成错误进行处理，并且取消编译操作。 使用 -Wall 和 -Werror就是为了找出可能存在的错误，尽可能地避免程序运行出错，优化程序。</p>
 </blockquote>
 <hr>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>PA1只要学过c语言基本上实现没什么难度，主要是要对代码框架的理解。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>PA1只要学过c基本上实现没什么难度，主要是要对代码框架的理解。</p>
 <br>
 
 
@@ -546,7 +539,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/" title="NEMU PA1 详解">https://aa10n.github.io/计算机系统基础大作业/NEMUPA1/</a>
+      <a href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/" title="计算机系统基础大作业 NEMU PA1">https://aa10n.github.io/计算机系统基础大作业/NEMUPA1/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -564,8 +557,8 @@
             <div class="post-nav-item">
             </div>
             <div class="post-nav-item">
-                <a href="/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/" rel="next" title="NEMU PA2 详解 (更新中)">
-                  NEMU PA2 详解 (更新中) <i class="fa fa-chevron-right"></i>
+                <a href="/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/" rel="next" title="计算机系统基础大作业 NEMU PA2">
+                  计算机系统基础大作业 NEMU PA2 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>

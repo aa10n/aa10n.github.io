@@ -22,28 +22,30 @@
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"aa10n.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":20},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。  x86 指令系统PA2的任务是实现基本x86指令，i386手册——INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)里很全面地列出了所有指令的细节。如果遇到任何问题，RTFM——READ THE FUCKING MANUAL基本上能解决你一切的问题。">
+<meta name="description" content="x86 指令系统PA2的任务是实现基本x86指令，i386手册——INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)里全面地列出了所有指令的细节。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NEMU PA2 详解 (更新中)">
+<meta property="og:title" content="计算机系统基础大作业 NEMU PA2">
 <meta property="og:url" content="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/index.html">
 <meta property="og:site_name" content="aa10n&#39;s blog">
-<meta property="og:description" content="在阅读本文前，务必自行阅读一遍南京大学的实验指导书。  x86 指令系统PA2的任务是实现基本x86指令，i386手册——INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)里很全面地列出了所有指令的细节。如果遇到任何问题，RTFM——READ THE FUCKING MANUAL基本上能解决你一切的问题。">
+<meta property="og:description" content="x86 指令系统PA2的任务是实现基本x86指令，i386手册——INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)里全面地列出了所有指令的细节。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20201211174725279.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80ODQwNjQwNw==,size_16,color_FFFFFF,t_70">
 <meta property="article:published_time" content="2021-09-22T14:22:12.000Z">
-<meta property="article:modified_time" content="2021-09-24T06:10:18.232Z">
+<meta property="article:modified_time" content="2021-09-26T07:31:53.802Z">
 <meta property="article:author" content="aa10n">
 <meta property="article:tag" content="NEMU">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20201211174725279.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80ODQwNjQwNw==,size_16,color_FFFFFF,t_70">
 
 
 <link rel="canonical" href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/","path":"计算机系统基础大作业/NEMUPA2/","title":"NEMU PA2 详解 (更新中)"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/","path":"计算机系统基础大作业/NEMUPA2/","title":"计算机系统基础大作业 NEMU PA2"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>NEMU PA2 详解 (更新中) | aa10n's blog</title>
+<title>计算机系统基础大作业 NEMU PA2 | aa10n's blog</title>
   
 
 
@@ -121,7 +123,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#x86-%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F"><span class="nav-text">x86 指令系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-text">实验内容：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%9E%E9%AA%8C"><span class="nav-text">开始实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A1-1%EF%BC%9A%E8%BF%90%E8%A1%8C%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F-mov-c"><span class="nav-text">必做任务 1：运行用户程序 mov-c</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C"><span class="nav-text">输出结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%8C%87%E4%BB%A4"><span class="nav-text">实现指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0call%E6%8C%87%E4%BB%A4"><span class="nav-text">实现call指令</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#x86-%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F"><span class="nav-text">x86 指令系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-text">实验内容：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E5%AE%9E%E9%AA%8C"><span class="nav-text">开始实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BF%85%E5%81%9A%E4%BB%BB%E5%8A%A1-1%EF%BC%9A%E8%BF%90%E8%A1%8C%E7%94%A8%E6%88%B7%E7%A8%8B%E5%BA%8F-mov-c"><span class="nav-text">必做任务 1：运行用户程序 mov-c</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C"><span class="nav-text">输出结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-text">指令格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%8C%87%E4%BB%A4"><span class="nav-text">实现指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0call%E6%8C%87%E4%BB%A4"><span class="nav-text">实现call指令</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -216,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          NEMU PA2 详解 (更新中)
+          计算机系统基础大作业 NEMU PA2
         </h1>
 
         <div class="post-meta-container">
@@ -249,12 +251,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <table><tr><td bgcolor=red><center><b>在阅读本文前，务必自行阅读一遍南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
-
-<h2 id="x86-指令系统"><a href="#x86-指令系统" class="headerlink" title="x86 指令系统"></a><center><font size=6>x86 指令系统</font></center></h2><p>PA2的任务是实现基本x86指令，i386手册——<a target="_blank" rel="noopener" href="http://css.csail.mit.edu/6.858/2013/readings/i386.pdf">INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)</a>里很全面地列出了所有指令的细节。如果遇到任何问题，RTFM——<b>READ THE FUCKING MANUAL</b>基本上能解决你一切的问题。</p>
+        <h2 id="x86-指令系统"><a href="#x86-指令系统" class="headerlink" title="x86 指令系统"></a><center><font size=6>x86 指令系统</font></center></h2><p>PA2的任务是实现基本x86指令，i386手册——<a target="_blank" rel="noopener" href="http://css.csail.mit.edu/6.858/2013/readings/i386.pdf">INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)</a>里全面地列出了所有指令的细节。</p>
 <span id="more"></span>
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次实验目的是为了能够了解汇编语言中指令的各处细节，掌握IA-32指令格式，并且对NEMU平台中的指令周期了解地更加全面。PA2就会开始涉及到一些计算机系统基础的知识。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次实验目的是为了能够了解汇编语言中指令的各处细节，掌握IA-32指令格式，并且对NEMU平台中的指令周期了解地更加全面。PA2会开始涉及到一些计算机系统基础的知识。</p>
+<table><tr><td bgcolor=red><center><b>南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/PA2.html target="_blank">实验指导书</a>。</b></center></td></tr></table>
+
 <h2 id="实验内容："><a href="#实验内容：" class="headerlink" title="实验内容："></a>实验内容：</h2><ul>
 <li>阶段 1: 编写 helper 函数, 在 NEMU 中运行第一个 C 程序——mov-c.c</li>
 <li>阶段 2: 实现更多的指令，并通过测试</li>
@@ -271,6 +273,8 @@
 <h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(nemu) c</span><br><span class="line">invalid opcode(eip = 0x001012c5): e8 c6 fe ff ff e8 d1 fe ...</span><br><span class="line"></span><br><span class="line">There are two cases <span class="built_in">which</span> will trigger this unexpected exception:</span><br><span class="line">1. The instruction at eip = 0x001012c5 is not implemented.</span><br><span class="line">2. Something is implemented incorrectly.</span><br><span class="line">Find this eip value(0x001012c5) <span class="keyword">in</span> the disassembling result to distinguish <span class="built_in">which</span> <span class="keyword">case</span> it is.</span><br><span class="line"></span><br><span class="line">If it is the first <span class="keyword">case</span>, see</span><br><span class="line"> _ ____   ___    __    __  __                         _ </span><br><span class="line">(_)___ \ / _ \  / /   |  \/  |                       | |</span><br><span class="line"> _  __) | (_) |/ /_   | \  / | __ _ _ __  _   _  __ _| |</span><br><span class="line">| ||__ &lt; &gt; _ &lt;| <span class="string">&#x27;_ \  | |\/| |/ _` | &#x27;</span>_ \| | | |/ _` | |</span><br><span class="line">| |___) | (_) | (_) | | |  | | (_| | | | | |_| | (_| | |</span><br><span class="line">|_|____/ \___/ \___/  |_|  |_|\__,_|_| |_|\__,_|\__,_|_|</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> more details.</span><br><span class="line"></span><br><span class="line">If it is the second <span class="keyword">case</span>, remember:</span><br><span class="line">* The machine is always right!</span><br><span class="line">* Every line of untested code is always wrong!</span><br><span class="line"></span><br><span class="line">nemu: nemu/src/cpu/<span class="built_in">exec</span>/special/special.c:24: inv: Assertion `0<span class="string">&#x27; failed.</span></span><br><span class="line"><span class="string">Makefile:63: recipe for target &#x27;</span>run<span class="string">&#x27; fail</span></span><br></pre></td></tr></table></figure>
 
 <p>执行NEMU后会发现报错，错误原因是还没有实现0xe8为首字节的指令。</p>
+<h2 id="指令格式"><a href="#指令格式" class="headerlink" title="指令格式"></a>指令格式</h2><p><img src="https://img-blog.csdnimg.cn/20201211174725279.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80ODQwNjQwNw==,size_16,color_FFFFFF,t_70"></p>
+<p>除了Opcode一定出现以外，其他都是可选的。当Opcode是66时，表示16位操作数，否则表示32位操作数。指令长度由<strong>Opcode ModR/M</strong> <strong>SIB</strong>决定，<strong>Displacement Immediate</strong>的长度由前3个(<strong>Opcode ModR/M SIB</strong>)决定，<strong>Opcode</strong>决定 <strong>ModR/M</strong> 的有无，<strong>ModR/M</strong>决定 <strong>SIB</strong> 的有无</p>
 <h2 id="实现指令"><a href="#实现指令" class="headerlink" title="实现指令"></a>实现指令</h2><p>首先需要查找i386手册中指令的相关篇幅，通过指令的opcode决定指令的具体形式。之后根据实验给出的代码框架，实现指令需要创建三个文件，分别为</p>
 <ul>
 <li>xxx-template.h</li>
@@ -289,7 +293,7 @@
 <li>eip跳转到函数地址。</li>
 </ul>
 <blockquote>
-<p>这里其实涉及了对指针ESP、帧指针EBP、栈函数调用栈、栈帧等各方面的理解。栈指针ESP永远指向系统栈中最上面一个栈帧的栈顶，而帧指针EBP则永远指向系统战中最上面一个栈帧的栈底，这两个指针的作用主要是用来保存（或恢复）堆栈。</p>
+<p>这里涉及了对指针ESP、帧指针EBP、栈函数调用栈、栈帧等各方面的理解。栈指针ESP永远指向系统栈中最上面一个栈帧的栈顶，而帧指针EBP则永远指向系统战中最上面一个栈帧的栈底，这两个指针的作用主要是用来保存（或恢复）堆栈。</p>
 <p>具体可参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/TuxedoLinux/article/details/100921994">栈帧ebp,esp详解_TuxedoLinux的博客-CSDN博客</a></p>
 </blockquote>
 <center><b>nemu/src/cpu/exec/control/call.c</b></center>
@@ -320,7 +324,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/" title="NEMU PA2 详解 (更新中)">https://aa10n.github.io/计算机系统基础大作业/NEMUPA2/</a>
+      <a href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/" title="计算机系统基础大作业 NEMU PA2">https://aa10n.github.io/计算机系统基础大作业/NEMUPA2/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -336,8 +340,8 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/" rel="prev" title="NEMU PA1 详解">
-                  <i class="fa fa-chevron-left"></i> NEMU PA1 详解
+                <a href="/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/" rel="prev" title="计算机系统基础大作业 NEMU PA1">
+                  <i class="fa fa-chevron-left"></i> 计算机系统基础大作业 NEMU PA1
                 </a>
             </div>
             <div class="post-nav-item">

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>NEMU PA2 详解 (更新中)</title>
+    <title>计算机系统基础大作业 NEMU PA2</title>
     <url>/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA2/</url>
-    <content><![CDATA[<table><tr><td bgcolor=red><center><b>在阅读本文前，务必自行阅读一遍南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
-
-<h2 id="x86-指令系统"><a href="#x86-指令系统" class="headerlink" title="x86 指令系统"></a><center><font size=6>x86 指令系统</font></center></h2><p>PA2的任务是实现基本x86指令，i386手册——<a href="http://css.csail.mit.edu/6.858/2013/readings/i386.pdf">INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)</a>里很全面地列出了所有指令的细节。如果遇到任何问题，RTFM——<b>READ THE FUCKING MANUAL</b>基本上能解决你一切的问题。</p>
+    <content><![CDATA[<h2 id="x86-指令系统"><a href="#x86-指令系统" class="headerlink" title="x86 指令系统"></a><center><font size=6>x86 指令系统</font></center></h2><p>PA2的任务是实现基本x86指令，i386手册——<a href="http://css.csail.mit.edu/6.858/2013/readings/i386.pdf">INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)</a>里全面地列出了所有指令的细节。</p>
 <span id="more"></span>
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次实验目的是为了能够了解汇编语言中指令的各处细节，掌握IA-32指令格式，并且对NEMU平台中的指令周期了解地更加全面。PA2就会开始涉及到一些计算机系统基础的知识。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次实验目的是为了能够了解汇编语言中指令的各处细节，掌握IA-32指令格式，并且对NEMU平台中的指令周期了解地更加全面。PA2会开始涉及到一些计算机系统基础的知识。</p>
+<table><tr><td bgcolor=red><center><b>南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/PA2.html target="_blank">实验指导书</a>。</b></center></td></tr></table>
+
 <h2 id="实验内容："><a href="#实验内容：" class="headerlink" title="实验内容："></a>实验内容：</h2><ul>
 <li>阶段 1: 编写 helper 函数, 在 NEMU 中运行第一个 C 程序——mov-c.c</li>
 <li>阶段 2: 实现更多的指令，并通过测试</li>
@@ -25,6 +25,8 @@
 <h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(nemu) c</span><br><span class="line">invalid opcode(eip = 0x001012c5): e8 c6 fe ff ff e8 d1 fe ...</span><br><span class="line"></span><br><span class="line">There are two cases <span class="built_in">which</span> will trigger this unexpected exception:</span><br><span class="line">1. The instruction at eip = 0x001012c5 is not implemented.</span><br><span class="line">2. Something is implemented incorrectly.</span><br><span class="line">Find this eip value(0x001012c5) <span class="keyword">in</span> the disassembling result to distinguish <span class="built_in">which</span> <span class="keyword">case</span> it is.</span><br><span class="line"></span><br><span class="line">If it is the first <span class="keyword">case</span>, see</span><br><span class="line"> _ ____   ___    __    __  __                         _ </span><br><span class="line">(_)___ \ / _ \  / /   |  \/  |                       | |</span><br><span class="line"> _  __) | (_) |/ /_   | \  / | __ _ _ __  _   _  __ _| |</span><br><span class="line">| ||__ &lt; &gt; _ &lt;| <span class="string">&#x27;_ \  | |\/| |/ _` | &#x27;</span>_ \| | | |/ _` | |</span><br><span class="line">| |___) | (_) | (_) | | |  | | (_| | | | | |_| | (_| | |</span><br><span class="line">|_|____/ \___/ \___/  |_|  |_|\__,_|_| |_|\__,_|\__,_|_|</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> more details.</span><br><span class="line"></span><br><span class="line">If it is the second <span class="keyword">case</span>, remember:</span><br><span class="line">* The machine is always right!</span><br><span class="line">* Every line of untested code is always wrong!</span><br><span class="line"></span><br><span class="line">nemu: nemu/src/cpu/<span class="built_in">exec</span>/special/special.c:24: inv: Assertion `0<span class="string">&#x27; failed.</span></span><br><span class="line"><span class="string">Makefile:63: recipe for target &#x27;</span>run<span class="string">&#x27; fail</span></span><br></pre></td></tr></table></figure>
 
 <p>执行NEMU后会发现报错，错误原因是还没有实现0xe8为首字节的指令。</p>
+<h2 id="指令格式"><a href="#指令格式" class="headerlink" title="指令格式"></a>指令格式</h2><p><img src="https://img-blog.csdnimg.cn/20201211174725279.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80ODQwNjQwNw==,size_16,color_FFFFFF,t_70"></p>
+<p>除了Opcode一定出现以外，其他都是可选的。当Opcode是66时，表示16位操作数，否则表示32位操作数。指令长度由<strong>Opcode ModR/M</strong> <strong>SIB</strong>决定，<strong>Displacement Immediate</strong>的长度由前3个(<strong>Opcode ModR/M SIB</strong>)决定，<strong>Opcode</strong>决定 <strong>ModR/M</strong> 的有无，<strong>ModR/M</strong>决定 <strong>SIB</strong> 的有无</p>
 <h2 id="实现指令"><a href="#实现指令" class="headerlink" title="实现指令"></a>实现指令</h2><p>首先需要查找i386手册中指令的相关篇幅，通过指令的opcode决定指令的具体形式。之后根据实验给出的代码框架，实现指令需要创建三个文件，分别为</p>
 <ul>
 <li>xxx-template.h</li>
@@ -43,7 +45,7 @@
 <li>eip跳转到函数地址。</li>
 </ul>
 <blockquote>
-<p>这里其实涉及了对指针ESP、帧指针EBP、栈函数调用栈、栈帧等各方面的理解。栈指针ESP永远指向系统栈中最上面一个栈帧的栈顶，而帧指针EBP则永远指向系统战中最上面一个栈帧的栈底，这两个指针的作用主要是用来保存（或恢复）堆栈。</p>
+<p>这里涉及了对指针ESP、帧指针EBP、栈函数调用栈、栈帧等各方面的理解。栈指针ESP永远指向系统栈中最上面一个栈帧的栈顶，而帧指针EBP则永远指向系统战中最上面一个栈帧的栈底，这两个指针的作用主要是用来保存（或恢复）堆栈。</p>
 <p>具体可参考：<a href="https://blog.csdn.net/TuxedoLinux/article/details/100921994">栈帧ebp,esp详解_TuxedoLinux的博客-CSDN博客</a></p>
 </blockquote>
 <center><b>nemu/src/cpu/exec/control/call.c</b></center>
@@ -66,25 +68,18 @@
       </tags>
   </entry>
   <entry>
-    <title>NEMU PA1 详解</title>
+    <title>计算机系统基础大作业 NEMU PA1</title>
     <url>/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E5%A4%A7%E4%BD%9C%E4%B8%9A/NEMUPA1/</url>
-    <content><![CDATA[<table><tr><td bgcolor=red><center><b>在阅读本文前，务必自行阅读一遍南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
-
-<h2 id="NEMU-是什么"><a href="#NEMU-是什么" class="headerlink" title="NEMU 是什么?"></a><center><font size=6>NEMU 是什么?</font></center></h2><p>这是实验指导书中的一段描述。</p>
+    <content><![CDATA[<h2 id="NEMU-是什么"><a href="#NEMU-是什么" class="headerlink" title="NEMU 是什么?"></a><center><font size=6>NEMU 是什么?</font></center></h2><p>这是实验指导书中的一段描述。</p>
 <blockquote>
 <p><font size=3><i>PA的目的是要实现NEMU, 一款经过简化的全系统模拟器.</p>
 <p>但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以为你模拟出红白机的所有功能. 有了它, 你就好像有了一个真正的红白机, 可以玩你最喜欢的红白机游戏. <a href="https://github.com/NJU-ProjectN/litenes">这里</a>是jyy移植的一个小型项目LiteNES, PA工程里面已经带有这个项目, 你可以在如今这个红白机难以寻觅的时代, 再次回味你儿时的快乐时光, 这实在是太神奇了!</i></front></p>
 </blockquote>
 <span id="more"></span>
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
-<li><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
-</li>
-<li><p>PA1几乎没有涉及到任何的计算机系统基础知识。我认为PA1是对写代码进行一个热身，把一些不太熟悉的操作再次学习。</p>
-</li>
-<li><p><b>代码框架请自行理解，实验指导书中已经详细说明了。</b></p>
-</li>
-</ul>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
+<table><tr><td bgcolor=red><center><b>南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a>。</b></center></td></tr></table>
+
 <hr>
 <h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>NEMU 是基于 Linux/GNU 实验环境，所需要的环境如下：</p>
 <ul>
@@ -345,7 +340,7 @@
 <p>-Wall 使GCC编译后显示所有的警告信息。 -Werror 会将将所有的警告当成错误进行处理，并且取消编译操作。 使用 -Wall 和 -Werror就是为了找出可能存在的错误，尽可能地避免程序运行出错，优化程序。</p>
 </blockquote>
 <hr>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>PA1只要学过c语言基本上实现没什么难度，主要是要对代码框架的理解。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>PA1只要学过c基本上实现没什么难度，主要是要对代码框架的理解。</p>
 <br>
 
 ]]></content>
