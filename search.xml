@@ -6,9 +6,9 @@
     <content><![CDATA[<h2 id="x86-指令系统"><a href="#x86-指令系统" class="headerlink" title="x86 指令系统"></a><center><font size=6>x86 指令系统</font></center></h2><p>PA2的任务是实现基本x86指令，i386手册——<a href="http://css.csail.mit.edu/6.858/2013/readings/i386.pdf">INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)</a>里全面地列出了所有指令的细节。</p>
 <span id="more"></span>
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次实验目的是为了能够了解汇编语言中指令的各处细节，掌握IA-32指令格式，并且对NEMU平台中的指令周期了解地更加全面。PA2会开始涉及到一些计算机系统基础的知识。</p>
 <table><tr><td bgcolor=red><center><b>南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/PA2.html target="_blank">实验指导书</a></b></center></td></tr></table>
 
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>此次实验目的是为了能够了解汇编语言中指令的各处细节，掌握IA-32指令格式，并且对NEMU平台中的指令周期了解地更加全面。PA2会开始涉及到一些计算机系统基础的知识。</p>
 <h2 id="实验内容："><a href="#实验内容：" class="headerlink" title="实验内容："></a>实验内容：</h2><ul>
 <li>阶段 1: 编写 helper 函数, 在 NEMU 中运行第一个 C 程序——mov-c.c</li>
 <li>阶段 2: 实现更多的指令，并通过测试</li>
@@ -101,9 +101,9 @@
 <p>这是实验指导书中的一段描述。</p>
 <span id="more"></span>
 
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
 <table><tr><td bgcolor=red><center><b>南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a></b></center></td></tr></table>
 
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
 <hr>
 <h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p>NEMU 是基于 Linux/GNU 实验环境，所需要的环境如下：</p>
 <ul>
