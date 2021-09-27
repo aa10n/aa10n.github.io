@@ -30,7 +30,7 @@
 <meta property="og:description" content="NEMU 是什么? PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以为你模拟出红白机的所有功能.">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-09-20T18:46:10.000Z">
-<meta property="article:modified_time" content="2021-09-27T11:10:24.641Z">
+<meta property="article:modified_time" content="2021-09-27T12:43:48.955Z">
 <meta property="article:author" content="aa10n">
 <meta property="article:tag" content="NEMU">
 <meta name="twitter:card" content="summary">
@@ -45,6 +45,9 @@
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>计算机系统基础大作业 NEMU PA1 | aa10n's blog</title>
   
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KERBMHHC6M"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-KERBMHHC6M","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
 
 
 
@@ -157,9 +160,6 @@
         <a href="https://github.com/aa10n" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aa10n" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://gitee.com/aa10n" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;aa10n" rel="noopener" target="_blank">Gitee</a>
-      </span>
-      <span class="links-of-author-item">
         <a href="mailto:jinde0501@gmail.com" title="E-Mail → mailto:jinde0501@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
@@ -256,7 +256,7 @@
 <p>这是实验指导书中的一段描述。</p>
 <span id="more"></span>
 
-<table><tr><td bgcolor=red><center><b>南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a></b></center></td></tr></table>
+<table><tr><td bgcolor=blue><center><b>南京大学的<a href=https://nju-projectn.github.io/ics-pa-gitbook/ics2019/ target="_blank">实验指导书</a></b></center></td></tr></table>
 
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>NEMU是一个模拟计算机系统，实现物理计算机的基本功能。更通俗地说，NEMU应该是把计算机的各个硬件虚拟化，使其看成一个个数据对象，例如NEMU中的内存，实际上是利用了数组的形式实现出来，并且我们可以对这个数据进行相应的操作，对应了实际我们对内存的读写操作。本实验便是要设计“NEMU”，一款经过简化的 x86 全系统模拟器。</p>
 <hr>
@@ -285,6 +285,7 @@
 </blockquote>
 <h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">aa10n@aa10n-VirtualBox:~/NEMU2021$ make run</span><br><span class="line">objcopy -S -O binary obj/kernel/kernel entry</span><br><span class="line">obj/nemu/nemu obj/testcase/mov-c</span><br><span class="line">Welcome to NEMU!</span><br><span class="line">The executable is obj/testcase/mov-c.</span><br><span class="line">For <span class="built_in">help</span>, <span class="built_in">type</span> <span class="string">&quot;help&quot;</span></span><br><span class="line">(nemu) c</span><br><span class="line">nemu: HIT GOOD TRAP at eip = 0x001012db</span><br></pre></td></tr></table></figure>
 
+<hr>
 <h2 id="必做任务2：实现单步执行、打印寄存器、扫描内存"><a href="#必做任务2：实现单步执行、打印寄存器、扫描内存" class="headerlink" title="必做任务2：实现单步执行、打印寄存器、扫描内存"></a>必做任务2：实现单步执行、打印寄存器、扫描内存</h2><p>这次的任务主要是模拟GDB相关的功能。</p>
 <center><b>nemu/src/monitor/debug/ui.c</b></center>
 
@@ -400,7 +401,7 @@
 
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* <span class="doctag">TODO:</span> check watchpoints here. */</span></span><br><span class="line"><span class="keyword">bool</span> change = checkWP();</span><br><span class="line"><span class="keyword">if</span> (change)&#123;</span><br><span class="line">	nemu_state = STOP;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>触发监视点后，更改nemu_state。</p>
+<p>触发监视点后，更改nemu_state的状态。</p>
 <center><b>nemu/src/monitor/debug/watchpoint.c</b></center>
 
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printf_wp</span><span class="params">()</span></span>&#123;</span><br><span class="line">	WP *temp = head;</span><br><span class="line">	<span class="keyword">if</span> (temp == <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;No watchpoints\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">while</span> (temp != <span class="literal">NULL</span>)&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Watch point %d: %s\n&quot;</span>, temp-&gt;NO, temp-&gt;expr);</span><br><span class="line">		temp = temp-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
