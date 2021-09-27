@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://i.loli.net/2021/09/27/AwxaM9m4vXJkItQ.png">
 <meta property="og:image" content="http://xiehongfeng100.github.io/images/os/linux-kenel-0.11/necessary-preparation/part10/stack_frame_structure.png">
 <meta property="article:published_time" content="2021-09-22T14:22:12.000Z">
-<meta property="article:modified_time" content="2021-09-27T12:44:18.816Z">
+<meta property="article:modified_time" content="2021-09-27T19:01:24.990Z">
 <meta property="article:author" content="aa10n">
 <meta property="article:tag" content="NEMU">
 <meta name="twitter:card" content="summary">
@@ -316,9 +316,7 @@
 <li>[esp] = 返回地址 ，把返回地址压入栈中。</li>
 <li>eip跳转到函数地址。</li>
 </ul>
-<blockquote>
 <p>这里涉及了对指针ESP、帧指针EBP、栈函数调用栈、栈帧等各方面的理解。栈指针ESP永远指向系统栈中最上面一个栈帧的栈顶，而帧指针EBP则永远指向系统战中最上面一个栈帧的栈底，这两个指针的作用主要是用来保存（或恢复）堆栈。后续有个选做任务也是和这个的原理类似。</p>
-</blockquote>
 <center><b>nemu/src/cpu/exec/control/call.c</b></center>
 
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;cpu/exec/helper.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DATA_BYTE 1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;call-template.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> DATA_BYTE</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DATA_BYTE 2</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;call-template.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> DATA_BYTE</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> DATA_BYTE 4</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;call-template.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> DATA_BYTE</span></span><br><span class="line"></span><br><span class="line">make_helper_v(call_i)</span><br><span class="line">make_helper_v(call_rm)</span><br></pre></td></tr></table></figure>
