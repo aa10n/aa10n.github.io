@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"aa10n.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":20},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aa10n.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.7.1","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":20},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 <meta name="description" content="NEMU 是什么? PA的目的是要实现NEMU, 一款经过简化的全系统模拟器. 但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以为你模拟出红白机的所有功能.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机系统基础综合实践 NEMU PA1">
@@ -158,17 +158,17 @@
 </div>
   <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
-        <a href="https://github.com/aa10n" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aa10n" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FhMTBu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aa10n"><i class="fab fa-github fa-fw"></i>GitHub</span>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:jinde0501@gmail.com" title="E-Mail → mailto:jinde0501@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+        <span class="exturl" data-url="bWFpbHRvOmppbmRlMDUwMUBnbWFpbC5jb20=" title="E-Mail → mailto:jinde0501@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
       </span>
       <span class="links-of-author-item">
-        <a href="https://www.instagram.com/jinde_0501/" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;jinde_0501&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
+        <span class="exturl" data-url="aHR0cHM6Ly93d3cuaW5zdGFncmFtLmNvbS9qaW5kZV8wNTAxLw==" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;jinde_0501&#x2F;"><i class="fab fa-instagram fa-fw"></i>Instagram</span>
       </span>
   </div>
   <div class="cc-license site-overview-item animated" itemprop="license">
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
   </div>
 
 
@@ -252,7 +252,7 @@
     <div class="post-body" itemprop="articleBody">
         <h2 id="NEMU-是什么"><a href="#NEMU-是什么" class="headerlink" title="NEMU 是什么?"></a><center><font size=6>NEMU 是什么?</font></center></h2><blockquote>
 <p><font size=3><i>PA的目的是要实现NEMU, 一款经过简化的全系统模拟器.</p>
-<p>但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以为你模拟出红白机的所有功能. 有了它, 你就好像有了一个真正的红白机, 可以玩你最喜欢的红白机游戏. <a target="_blank" rel="noopener" href="https://github.com/NJU-ProjectN/litenes">这里</a>是jyy移植的一个小型项目LiteNES, PA工程里面已经带有这个项目, 你可以在如今这个红白机难以寻觅的时代, 再次回味你儿时的快乐时光, 这实在是太神奇了!</i></front></p>
+<p>但什么是模拟器呢?你小时候应该玩过红白机, 超级玛丽, 坦克大战, 魂斗罗… 它们的画面是否让你记忆犹新? (希望我们之间没有代沟…) 随着时代的发展, 你已经很难在市场上看到红白机的身影了. 当你正在为此感到苦恼的时候, 模拟器的横空出世唤醒了你心中尘封已久的童年回忆. 红白机模拟器可以为你模拟出红白机的所有功能. 有了它, 你就好像有了一个真正的红白机, 可以玩你最喜欢的红白机游戏. <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL05KVS1Qcm9qZWN0Ti9saXRlbmVz">这里<i class="fa fa-external-link-alt"></i></span>是jyy移植的一个小型项目LiteNES, PA工程里面已经带有这个项目, 你可以在如今这个红白机难以寻觅的时代, 再次回味你儿时的快乐时光, 这实在是太神奇了!</i></front></p>
 </blockquote>
 <p>这是实验指导书中的一段描述。</p>
 <span id="more"></span>
@@ -325,7 +325,7 @@
 
 <p>在结构体rule中添加相应的规则，利用正则表达式来判断输入的字符。</p>
 <blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.runoob.com/regexp/regexp-syntax.html">正则表达式 – 语法 | 菜鸟教程 (runoob.com)</a></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cucnVub29iLmNvbS9yZWdleHAvcmVnZXhwLXN5bnRheC5odG1s">正则表达式 – 语法 | 菜鸟教程 (runoob.com)<i class="fa fa-external-link-alt"></i></span></p>
 </blockquote>
 <center><b>nemu/src/monitor/debug/expr.c</b></center>
 
@@ -538,7 +538,7 @@
       <a href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80/NEMUPA1/" title="计算机系统基础综合实践 NEMU PA1">https://aa10n.github.io/计算机系统基础/NEMUPA1/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
   </li>
 </ul>
 </div>
