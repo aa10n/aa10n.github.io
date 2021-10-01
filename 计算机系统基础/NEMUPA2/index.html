@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"aa10n.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.7.1","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":20},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"aa10n.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":true,"version":"8.7.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":20},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 <meta name="description" content="x86 指令系统PA2的任务是实现基本x86指令，i386手册——INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)里全面地列出了所有指令的细节。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="计算机系统基础综合实践 NEMU PA2">
@@ -169,17 +169,17 @@
 </div>
   <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
-        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FhMTBu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aa10n"><i class="fab fa-github fa-fw"></i>GitHub</span>
+        <a href="https://github.com/aa10n" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;aa10n" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <span class="exturl" data-url="bWFpbHRvOmppbmRlMDUwMUBnbWFpbC5jb20=" title="E-Mail → mailto:jinde0501@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+        <a href="mailto:jinde0501@gmail.com" title="E-Mail → mailto:jinde0501@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <span class="exturl" data-url="aHR0cHM6Ly93d3cuaW5zdGFncmFtLmNvbS9qaW5kZV8wNTAxLw==" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;jinde_0501&#x2F;"><i class="fab fa-instagram fa-fw"></i>Instagram</span>
+        <a href="https://www.instagram.com/jinde_0501/" title="Instagram → https:&#x2F;&#x2F;www.instagram.com&#x2F;jinde_0501&#x2F;" rel="noopener" target="_blank"><i class="fab fa-instagram fa-fw"></i>Instagram</a>
       </span>
   </div>
   <div class="cc-license site-overview-item animated" itemprop="license">
-    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
   </div>
 
 
@@ -261,7 +261,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h2 id="x86-指令系统"><a href="#x86-指令系统" class="headerlink" title="x86 指令系统"></a><center><font size=6>x86 指令系统</font></center></h2><p>PA2的任务是实现基本x86指令，i386手册——<span class="exturl" data-url="aHR0cDovL2Nzcy5jc2FpbC5taXQuZWR1LzYuODU4LzIwMTMvcmVhZGluZ3MvaTM4Ni5wZGY=">INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)<i class="fa fa-external-link-alt"></i></span>里全面地列出了所有指令的细节。</p>
+        <h2 id="x86-指令系统"><a href="#x86-指令系统" class="headerlink" title="x86 指令系统"></a><center><font size=6>x86 指令系统</font></center></h2><p>PA2的任务是实现基本x86指令，i386手册——<a target="_blank" rel="noopener" href="http://css.csail.mit.edu/6.858/2013/readings/i386.pdf">INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986 (mit.edu)</a>里全面地列出了所有指令的细节。</p>
 <span id="more"></span>
 
 <table><tr><td bgcolor=blue><center><b><a href=https://pan.baidu.com/s/1ghLreFGtrCEnDIzEJsTUUA target="_blank">实验指导书</a>，提取码：9h8k</b></center></td></tr></table>
@@ -302,7 +302,7 @@
 <li>当Reg/Opcode域被当作Opcode来解释的时候，这些指令会被划分为不同的指令组，在同一个指令组的指令则需要通过Reg/Opcode域中的Opcode来唯一确定。</li>
 </ul>
 <hr>
-<h2 id="必做任务-1：运行用户程序-mov-c"><a href="#必做任务-1：运行用户程序-mov-c" class="headerlink" title="必做任务 1：运行用户程序 mov-c"></a>必做任务 1：运行用户程序 mov-c</h2><p>首先需要查找<span class="exturl" data-url="aHR0cDovL2Nzcy5jc2FpbC5taXQuZWR1LzYuODU4LzIwMTMvcmVhZGluZ3MvaTM4Ni5wZGY=">i386<i class="fa fa-external-link-alt"></i></span>手册中指令的相关篇幅，通过指令的Opcode决定指令的具体形式。之后根据实验给出的代码框架，实现指令需要创建三个文件，分别为xxx-template.h、xxx.c、xxx.h。最后必须在<strong>nemu/src/cpu/exec/all-instar.h</strong>包含所创建的指令头文件，并且在<strong>nemu/src/cpu/exec/exec.c</strong>中依照Opcode在正确的位置添加与之相对应的指令。<b>PA2代码框架中所定义的宏极为重要，在实现指令时可以省去很多重复的步骤，需要仔细阅读实验指导书并且理解。</b></p>
+<h2 id="必做任务-1：运行用户程序-mov-c"><a href="#必做任务-1：运行用户程序-mov-c" class="headerlink" title="必做任务 1：运行用户程序 mov-c"></a>必做任务 1：运行用户程序 mov-c</h2><p>首先需要查找<a target="_blank" rel="noopener" href="http://css.csail.mit.edu/6.858/2013/readings/i386.pdf">i386</a>手册中指令的相关篇幅，通过指令的Opcode决定指令的具体形式。之后根据实验给出的代码框架，实现指令需要创建三个文件，分别为xxx-template.h、xxx.c、xxx.h。最后必须在<strong>nemu/src/cpu/exec/all-instar.h</strong>包含所创建的指令头文件，并且在<strong>nemu/src/cpu/exec/exec.c</strong>中依照Opcode在正确的位置添加与之相对应的指令。<b>PA2代码框架中所定义的宏极为重要，在实现指令时可以省去很多重复的步骤，需要仔细阅读实验指导书并且理解。</b></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">(nemu) c</span><br><span class="line">invalid opcode(eip = 0x001012c5): e8 c6 fe ff ff e8 d1 fe ...</span><br><span class="line"></span><br><span class="line">There are two cases <span class="built_in">which</span> will trigger this unexpected exception:</span><br><span class="line">1. The instruction at eip = 0x001012c5 is not implemented.</span><br><span class="line">2. Something is implemented incorrectly.</span><br><span class="line">Find this eip value(0x001012c5) <span class="keyword">in</span> the disassembling result to distinguish <span class="built_in">which</span> <span class="keyword">case</span> it is.</span><br><span class="line"></span><br><span class="line">If it is the first <span class="keyword">case</span>, see</span><br><span class="line"> _ ____   ___    __    __  __                         _ </span><br><span class="line">(_)___ \ / _ \  / /   |  \/  |                       | |</span><br><span class="line"> _  __) | (_) |/ /_   | \  / | __ _ _ __  _   _  __ _| |</span><br><span class="line">| ||__ &lt; &gt; _ &lt;| <span class="string">&#x27;_ \  | |\/| |/ _` | &#x27;</span>_ \| | | |/ _` | |</span><br><span class="line">| |___) | (_) | (_) | | |  | | (_| | | | | |_| | (_| | |</span><br><span class="line">|_|____/ \___/ \___/  |_|  |_|\__,_|_| |_|\__,_|\__,_|_|</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> more details.</span><br><span class="line"></span><br><span class="line">If it is the second <span class="keyword">case</span>, remember:</span><br><span class="line">* The machine is always right!</span><br><span class="line">* Every line of untested code is always wrong!</span><br><span class="line"></span><br><span class="line">nemu: nemu/src/cpu/<span class="built_in">exec</span>/special/special.c:24: inv: Assertion `0<span class="string">&#x27; failed.</span></span><br><span class="line"><span class="string">Makefile:63: recipe for target &#x27;</span>run<span class="string">&#x27; fail</span></span><br></pre></td></tr></table></figure>
 
 <p>修改NEMU根目录下Make File中的用户程序后，执行NEMU会发现报错，错误原因是还没有实现0xe8为首字节的指令。下面会给出两个实现指令的过程，剩余指令就不给出了。</p>
@@ -379,7 +379,7 @@
 
 <p>浮点数遵循着IEEE 754标准。</p>
 <blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2ZhbmcwanVuL0Jsb2cvaXNzdWVzLzI3">浮点数详解(IEEE 754标准） · Issue #27 · fang0jun/Blog · GitHub<i class="fa fa-external-link-alt"></i></span></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/fang0jun/Blog/issues/27">浮点数详解(IEEE 754标准） · Issue #27 · fang0jun/Blog · GitHub</a></p>
 </blockquote>
 <hr>
 <h2 id="定点化浮点数"><a href="#定点化浮点数" class="headerlink" title="定点化浮点数"></a>定点化浮点数</h2><p>x86架构上引进了协处理器x87架构，所以就可以处理浮点数运算相关的指令。但是NEMU中不实现类似x87架构的指令系统，所以引进了一个概念，”浮点数定点化”，是通过32位整数来模拟浮点数，就是为了让NEMU实现类似浮点数的机制，称作定点数。</p>
@@ -408,7 +408,7 @@
 
 <p>两个定点数相乘要用long long的类型，绝对值的话直接把小于0的数乘上个负数。剩余有两点需要注意，一个是浮点数如何转换成定点数，需要了解<a href="#%E6%B5%AE%E7%82%B9%E6%95%B0">浮点数</a>具体的结构，另一个则是运用内联汇编。</p>
 <blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNTgzNDg5NC9hcnRpY2xlL2RldGFpbHMvMTA4ODc1NDUx">gcc 内联汇编格式以及详解_坚持的力量-CSDN博客<i class="fa fa-external-link-alt"></i></span></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_35834894/article/details/108875451">gcc 内联汇编格式以及详解_坚持的力量-CSDN博客</a></p>
 </blockquote>
 <p>之后根据实验指导书中需要修改的地方都修改后，便可运行integral和quadratic-eq这两个程序。</p>
 <hr>
@@ -436,9 +436,9 @@
 <hr>
 <h2 id="ELF文件"><a href="#ELF文件" class="headerlink" title="ELF文件"></a>ELF文件</h2><p>ELF文件提供了两个视角，分别为面向链接的<strong>section</strong>视角和面向执行的<strong>segment</strong>视角。里面很多细节，直接上链接。</p>
 <blockquote>
-<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vamlxaW5nd3UvcC9lbGZfZm9ybWF0X3Jlc2VhcmNoXzAxLmh0bWw=">ELF文件解析（一）：Segment和Section - JollyWing - 博客园 (cnblogs.com)<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vamlxaW5nd3UvcC9lbGZfZXhwbG9yZV8yLmh0bWw=">ELF文件解析（二）：ELF header详解 - JollyWing - 博客园 (cnblogs.com)<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vamlxaW5nd3UvcC9lbGZfZXhwbG9yZV8zLmh0bWw=">ELF格式探析之三：sections - JollyWing - 博客园 (cnblogs.com)<i class="fa fa-external-link-alt"></i></span></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiqingwu/p/elf_format_research_01.html">ELF文件解析（一）：Segment和Section - JollyWing - 博客园 (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiqingwu/p/elf_explore_2.html">ELF文件解析（二）：ELF header详解 - JollyWing - 博客园 (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/jiqingwu/p/elf_explore_3.html">ELF格式探析之三：sections - JollyWing - 博客园 (cnblogs.com)</a></p>
 </blockquote>
 <hr>
 <h2 id="必做任务-5：实现-loader"><a href="#必做任务-5：实现-loader" class="headerlink" title="必做任务 5：实现 loader"></a>必做任务 5：实现 loader</h2><center><b>kernel/src/elf/elf.c</b></center>
@@ -534,7 +534,7 @@
       <a href="https://aa10n.github.io/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80/NEMUPA2/" title="计算机系统基础综合实践 NEMU PA2">https://aa10n.github.io/计算机系统基础/NEMUPA2/</a>
   </li>
   <li class="post-copyright-license">
-    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC8="><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
   </li>
 </ul>
 </div>
